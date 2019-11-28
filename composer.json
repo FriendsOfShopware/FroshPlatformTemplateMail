@@ -1,0 +1,37 @@
+{
+    "name": "frosh/frosh-platform-template-mail",
+    "version": "0.1.0",
+    "type": "shopware-platform-plugin",
+    "description": "Load mail templates from theme",
+    "keywords": [
+        "adminer",
+        "shopware",
+        "frosh"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "FriendsOfShopware",
+            "homepage": "https://friendsofshopware.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Frosh\\TemplateMail\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Frosh\\TemplateMail\\FroshPlatformTemplateMail",
+        "label": {
+            "de-DE": "Mail Templates aus dem Theme verwenden",
+            "en-GB": "Use mail templates from store"
+        },
+        "description": {
+            "de-DE": "Mail Templates aus dem Theme verwenden",
+            "en-GB": "Use mail templates from store"
+        }
+    },
+    "require": {
+        "lorenzo/pinky": "^1.0"
+    }
+}

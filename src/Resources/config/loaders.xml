@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Frosh\TemplateMail\Services\MailLoader\TwigLoader">
+            <tag name="frosh_template_mail.loader"/>
+        </service>
+
+        <service id="Frosh\TemplateMail\Services\MailLoader\MjmlLoader">
+            <tag name="frosh_template_mail.loader"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <service id="Frosh\TemplateMail\Services\MailLoader\InkyLoader">
+            <tag name="frosh_template_mail.loader"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,4 @@
+.idea
+*.phar
+/vendor
+src/Resources/views/email
