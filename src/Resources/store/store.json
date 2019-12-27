@@ -1,0 +1,29 @@
+{
+    "storeAvailabilities": [
+        "International"
+    ],
+    "standardLocale": "en_GB",
+    "localizations": [
+        "en_GB",
+        "de_DE"
+    ],
+    "categories": [
+        "System"
+    ],
+    "productType": "extension",
+    "responsive": true,
+    "tags": {
+        "en": [
+            "mail",
+            "template",
+            "theme",
+            "mjml"
+        ],
+        "de": [
+            "mail",
+            "template",
+            "theme",
+            "mjml"
+        ]
+    }
+}

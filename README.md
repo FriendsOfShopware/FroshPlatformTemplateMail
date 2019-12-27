@@ -1,0 +1,55 @@
+# Store Shopware mail templates in theme
+
+[![Join the chat at https://gitter.im/FriendsOfShopware/Lobby](https://badges.gitter.im/FriendsOfShopware/Lobby.svg)](https://gitter.im/FriendsOfShopware/Lobby)
+
+This plugin allows to store the mails in theme instead of database. This gives us advantages like
+
+* easier deployment
+* translate it using snippets
+* build your mail template using includes / extends / blocks / inheritance
+* usage of theme configuration
+
+
+## Requirements
+
+- Shopware 6.1
+- PHP 7.2
+
+
+## Installation
+
+- Download latest release
+- Extract the zip file in `shopware_folder/custom/plugins/`
+
+
+## Template location
+
+Create a mail for a specific subshop or language shop (also inheritance in shops works)
+
+Search order in example with sOrder:
+
+* HTML Template
+  * custom/plugins/MyTheme/Resources/views/email/[ID]/order_transaction.state.paid/html.twig (Saleschannel ID)
+  * custom/plugins/MyTheme/Resources/views/email/[ID]/order_transaction.state.paid/html.twig (Language ID)
+  * custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/html.twig (Default)
+  * Database saved values
+* Text Template
+  * custom/plugins/MyTheme/Resources/views/email/[ID]/order_transaction.state.paid/text.twig (Saleschannel ID)
+  * custom/plugins/MyTheme/Resources/views/email/[ID]/order_transaction.state.paid/text.twig (Language ID)
+  * custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/text.twig (Default)
+  * Database saved values
+* Subject Template
+  * custom/plugins/MyTheme/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Saleschannel ID)
+  * custom/plugins/MyTheme/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Language ID)
+  * custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/subject.twig (Default)
+  * Database saved values
+
+
+## Contributing
+
+Feel free to fork and send pull requests!
+
+
+## Licence
+
+This project uses the [MIT License](LICENCE.md).

@@ -32,6 +32,8 @@
         }
     },
     "require": {
+        "shopware/core": "~6.1",
+        "shopware/administration": "~6.1",
         "lorenzo/pinky": "^1.0"
     }
 }
