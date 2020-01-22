@@ -8,16 +8,11 @@
         <import resource="loaders.xml"/>
     </imports>
     <services>
-        <service id="Frosh\TemplateMail\Services\Configuration">
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-        </service>
-
         <service id="Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriber" class="Frosh\TemplateMail\Subscriber\MailSendSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="Shopware\Core\Content\MailTemplate\Service\MailService"/>
             <argument type="service" id="mail_template.repository"/>
             <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
-            <argument type="service" id="Frosh\TemplateMail\Services\Configuration"/>
         </service>
 
         <service id="Frosh\TemplateMail\Services\MailFinderService">
