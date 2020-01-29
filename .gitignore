@@ -2,3 +2,4 @@
 *.phar
 /vendor
 src/Resources/views/email
+src/DependencyInjection/OrderActionController.php

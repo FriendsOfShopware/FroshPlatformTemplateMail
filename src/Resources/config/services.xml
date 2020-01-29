@@ -15,6 +15,12 @@
             <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
         </service>
 
+        <service id="Frosh\TemplateMail\Subscriber\MailDataBagFilterSubscriber">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="mail_template_type.repository"/>
+            <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
+        </service>
+
         <service id="Frosh\TemplateMail\Services\MailFinderService">
             <argument type="service" id="twig.loader"/>
             <argument type="tagged" tag="frosh_template_mail.loader"/>

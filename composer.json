@@ -24,16 +24,17 @@
         "shopware-plugin-class": "Frosh\\TemplateMail\\FroshPlatformTemplateMail",
         "label": {
             "de-DE": "Mail Templates aus dem Theme verwenden",
-            "en-GB": "Use mail templates from store"
+            "en-GB": "Use mail templates from theme"
         },
         "description": {
             "de-DE": "Mail Templates aus dem Theme verwenden",
-            "en-GB": "Use mail templates from store"
+            "en-GB": "Use mail templates from theme"
         }
     },
     "require": {
         "shopware/core": "~6.1",
         "shopware/administration": "~6.1",
-        "lorenzo/pinky": "^1.0"
+        "lorenzo/pinky": "^1.0",
+        "nikic/php-parser": "4.3.0"
     }
 }
