@@ -10,7 +10,7 @@ After installation nothing changes for you. You can now start to swap the first 
 Example paths:
 
 * custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/html.twig - content of the sOrder in HTML form
-* custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/text.twig - content of the sOrder in text form
+* custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/plain.twig - content of the sOrder in text form
 * custom/plugins/MyTheme/Resources/views/email/global/order_transaction.state.paid/subject.twig - title of the sOrder Mailion)
 
 The plugin is provided by the Github Organization [FriendsOfShopware](https://github.com/FriendsOfShopware/).

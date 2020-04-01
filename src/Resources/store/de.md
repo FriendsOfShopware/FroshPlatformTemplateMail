@@ -10,7 +10,7 @@ Durch die Installation ändert sich erst mal nichts für dich. Du kannst anfange
 Ordner: custom/plugins/*MyTheme*/Resources/views/email/global/
 
 - HTML-Inhalt der Zahlungsbestätigung: *order_transaction.state.paid*/html.twig
-- PlainText-Inhalt der Zahlungsbestätigung: *order_transaction.state.paid*/text.twig
+- PlainText-Inhalt der Zahlungsbestätigung: *order_transaction.state.paid*/plain.twig
 - Betreff der Zahlungsbestätigung: *order_transaction.state.paid*/subject.twig
 
 

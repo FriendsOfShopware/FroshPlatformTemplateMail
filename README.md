@@ -35,9 +35,9 @@ custom/plugins/FroshPlatformTemplateMail/src/Resources/views/email/global/order_
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/html.twig (Default)
   * Database saved values
 * Text Template
-  * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/text.twig (Saleschannel ID)
-  * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/text.twig (Language ID)
-  * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/text.twig (Default)
+  * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/plain.twig (Saleschannel ID)
+  * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/plain.twig (Language ID)
+  * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/plain.twig (Default)
   * Database saved values
 * Subject Template
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Saleschannel ID)
