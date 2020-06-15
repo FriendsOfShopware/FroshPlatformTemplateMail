@@ -16,5 +16,5 @@ Ordner: custom/plugins/*MyTheme*/Resources/views/email/global/
 
 Das Plugin wird von der Github Organization [FriendsOfShopware](https://github.com/FriendsOfShopware/) entwickelt.
 Maintainer des Plugin ist [Soner Sayakci](https://github.com/shyim).
-Das Github Repository ist zu finden [hier](https://github.com/FriendsOfShopware/FroshPlatformAdminer)
-[Bei Fragen / Fehlern bitte ein Github Issue erstellen](https://github.com/FriendsOfShopware/FroshPlatformAdminer/issues/new)
+Das Github Repository ist zu finden [hier](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail)
+[Bei Fragen / Fehlern bitte ein Github Issue erstellen](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/issues/new)
