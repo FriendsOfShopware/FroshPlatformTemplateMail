@@ -2,4 +2,4 @@
 *.phar
 /vendor
 src/Resources/views/email
-src/DependencyInjection/OrderActionController.php
+src/DependencyInjection/OrderService.php

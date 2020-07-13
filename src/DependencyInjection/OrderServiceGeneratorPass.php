@@ -16,16 +16,18 @@ use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use Shopware\Core\Checkout\Order\Api\OrderActionController;
+use Shopware\Core\Checkout\Order\SalesChannel\OrderService;
+use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class OrderActionControllerGeneratorPass implements CompilerPassInterface
+class OrderServiceGeneratorPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $orderAction = new \ReflectionClass(OrderActionController::class);
+        $orderAction = new \ReflectionClass(OrderService::class);
 
         $builder = new BuilderFactory();
 
@@ -39,21 +41,22 @@ class OrderActionControllerGeneratorPass implements CompilerPassInterface
 
         /** @var Class_ $class */
         $class = $nodeFinder->findFirstInstanceOf($orderActionNodes, Class_::class);
+        $class->extends = new Name('\\' . OrderService::class);
 
         // EventDispatcher property
-        array_unshift($class->stmts, $builder->property('eventDispatcher')->getNode());
+        array_unshift($class->stmts, $builder->property('froshEventDispatcher')->getNode());
 
         $methods = $nodeFinder->findInstanceOf($class->stmts, ClassMethod::class);
 
-        $propertyFetch = $builder->propertyFetch($builder->var('this'), 'eventDispatcher');
+        $propertyFetch = $builder->propertyFetch($builder->var('this'), 'froshEventDispatcher');
         $argCount = null;
 
         /** @var ClassMethod $method */
         foreach ($methods as $method) {
             if ($method->name->name === '__construct') {
-                $method->params[] = $builder->param('eventDispatcher')->getNode();
+                $method->params[] = $builder->param('froshEventDispatcher')->getNode();
                 $argCount = count($method->params);
-                $method->stmts[] = new Expression(new Assign($propertyFetch, $builder->var('eventDispatcher')));
+                $method->stmts[] = new Expression(new Assign($propertyFetch, $builder->var('froshEventDispatcher')));
             } else if($method->name->name === 'sendMail') {
                 foreach ($method->stmts as $i => $stmt) {
                     if (!$stmt instanceof Expression) {
@@ -76,8 +79,10 @@ class OrderActionControllerGeneratorPass implements CompilerPassInterface
                         continue;
                     }
 
+                    $dataBag = $builder->new('\\' . DataBag::class, [$builder->methodCall($builder->var('data'), 'all')]);
+
                     // Fire event
-                    $arg = $builder->new('\\' . MailDataBagFilter::class, [$builder->var('data'), $builder->var('mailTemplate'), $builder->var('context')]);
+                    $arg = $builder->new('\\' . MailDataBagFilter::class, [$dataBag, $builder->var('mailTemplate'), $builder->var('context')]);
                     $newStmt = new Expression($builder->methodCall($propertyFetch, 'dispatch', [$arg]));
 
                     array_splice($method->stmts, $i, 0, [$newStmt]);
@@ -87,15 +92,10 @@ class OrderActionControllerGeneratorPass implements CompilerPassInterface
 
         $printer = new Standard();
 
-        file_put_contents(__DIR__ . '/OrderActionController.php', $printer->prettyPrintFile($orderActionNodes));
+        file_put_contents(__DIR__ . '/OrderService.php', $printer->prettyPrintFile($orderActionNodes));
 
-        $container->getDefinition(OrderActionController::class)
-            ->setClass(__NAMESPACE__ . '\\OrderActionController')
+        $container->getDefinition(OrderService::class)
+            ->setClass(__NAMESPACE__ . '\\OrderService')
             ->setArgument($argCount - 1, new Reference(EventDispatcherInterface::class));
-
-//        $printer->prettyPrintFile($orderActionNodes);
-//
-//        echo (new NodeDumper())->dump($orderActionNodes);
-//        die();
     }
 }

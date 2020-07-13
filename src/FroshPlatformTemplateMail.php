@@ -3,7 +3,7 @@
 namespace Frosh\TemplateMail;
 
 use Frosh\TemplateMail\DependencyInjection\CacheCompilerPass;
-use Frosh\TemplateMail\DependencyInjection\OrderActionControllerGeneratorPass;
+use Frosh\TemplateMail\DependencyInjection\OrderServiceGeneratorPass;
 use PhpParser\NodeDumper;
 use PhpParser\ParserFactory;
 use Shopware\Core\Checkout\Order\Api\OrderActionController;
@@ -21,7 +21,7 @@ class FroshPlatformTemplateMail extends Plugin
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new CacheCompilerPass());
-        $container->addCompilerPass(new OrderActionControllerGeneratorPass());
+        $container->addCompilerPass(new OrderServiceGeneratorPass());
         parent::build($container);
     }
 }

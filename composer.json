@@ -32,8 +32,8 @@
         }
     },
     "require": {
-        "shopware/core": "~6.1|~6.2",
-        "shopware/administration": "~6.1|~6.2",
+        "shopware/core": "~6.2",
+        "shopware/administration": "~6.2",
         "lorenzo/pinky": "^1.0",
         "nikic/php-parser": "4.3.0"
     }
