@@ -31,9 +31,6 @@ jobs:
             -   name: Validate Zip
                 run: php frosh-plugin-upload.phar ext:validate $(pwd)/${PLUGIN_NAME}*.zip
 
-            -   name: StoreCheck
-                run: php frosh-plugin-upload.phar ext:validate $(pwd)/${PLUGIN_NAME}*.zip
-
     StoreUpdate:
         needs: validatePlugin
         if: startsWith(github.ref, 'refs/tags/') != true
