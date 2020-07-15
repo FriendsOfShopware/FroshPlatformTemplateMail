@@ -11,8 +11,8 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Event\BusinessEvent;
-use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class MailDataBagFilterSubscriber implements EventSubscriberInterface
 {
@@ -64,7 +64,7 @@ class MailDataBagFilterSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function createBusinessEventFromBag(DataBag $dataBag, Context $context): BusinessEvent
+    private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): BusinessEvent
     {
         return new TemplateMailBusinessEvent($dataBag->get('salesChannelId'), $context);
     }

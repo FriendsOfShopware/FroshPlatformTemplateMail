@@ -79,10 +79,8 @@ class OrderServiceGeneratorPass implements CompilerPassInterface
                         continue;
                     }
 
-                    $dataBag = $builder->new('\\' . DataBag::class, [$builder->methodCall($builder->var('data'), 'all')]);
-
                     // Fire event
-                    $arg = $builder->new('\\' . MailDataBagFilter::class, [$dataBag, $builder->var('mailTemplate'), $builder->var('context')]);
+                    $arg = $builder->new('\\' . MailDataBagFilter::class, [$builder->var('data'), $builder->var('mailTemplate'), $builder->var('context')]);
                     $newStmt = new Expression($builder->methodCall($propertyFetch, 'dispatch', [$arg]));
 
                     array_splice($method->stmts, $i, 0, [$newStmt]);

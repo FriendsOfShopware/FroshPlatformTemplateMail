@@ -5,12 +5,13 @@ namespace Frosh\TemplateMail\Event;
 use Shopware\Core\Content\MailTemplate\MailTemplateEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class MailDataBagFilter extends Event
 {
     /**
-     * @var DataBag
+     * @var ParameterBag
      */
     private $dataBag;
 
@@ -24,21 +25,16 @@ class MailDataBagFilter extends Event
      */
     private $context;
 
-    public function __construct(DataBag $dataBag, MailTemplateEntity $mailTemplateEntity, Context $context)
+    public function __construct(ParameterBag $dataBag, MailTemplateEntity $mailTemplateEntity, Context $context)
     {
         $this->dataBag = $dataBag;
         $this->mailTemplateEntity = $mailTemplateEntity;
         $this->context = $context;
     }
 
-    public function getDataBag(): DataBag
+    public function getDataBag(): ParameterBag
     {
         return $this->dataBag;
-    }
-
-    public function setDataBag(DataBag $dataBag): void
-    {
-        $this->dataBag = $dataBag;
     }
 
     public function getMailTemplateEntity(): MailTemplateEntity
