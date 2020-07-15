@@ -29,6 +29,14 @@
         "description": {
             "de-DE": "Mail Templates aus dem Theme verwenden",
             "en-GB": "Use mail templates from theme"
+        },
+        "manufacturerLink": {
+            "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformTemplateMail",
+            "en-GB": "https://github.com/FriendsOfShopware/FroshPlatformTemplateMail"
+        },
+        "supportLink": {
+            "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/issues",
+            "en-GB": "https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/issues"
         }
     },
     "require": {
