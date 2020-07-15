@@ -10,7 +10,7 @@ env:
     PLUGIN_NAME: FroshPlatformTemplateMail
     ACCOUNT_USER: ${{ secrets.ACCOUNT_USER }}
     ACCOUNT_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
-    Plugin_Uploader_Version: 0.3.2
+    PLUGIN_UPLOADER_VERSION: 0.3.2
 
 jobs:
     validatePlugin:
@@ -23,7 +23,7 @@ jobs:
                     path: ${{ env.PLUGIN_NAME }}
 
             -   name: getPluginUploader
-                run: wget 'https://github.com/FriendsOfShopware/FroshPluginUploader/releases/download/${PLUGIN_NAME}/frosh-plugin-upload.phar' -O frosh-plugin-upload.phar
+                run: wget 'https://github.com/FriendsOfShopware/FroshPluginUploader/releases/download/${{ env.PLUGIN_UPLOADER_VERSION }}/frosh-plugin-upload.phar' -O frosh-plugin-upload.phar
 
             -   name: Build Zip
                 run: php frosh-plugin-upload.phar ext:zip ${PLUGIN_NAME}
@@ -45,7 +45,7 @@ jobs:
                     path: ${{ env.PLUGIN_NAME }}
 
             -   name: getPluginUploader
-                run: wget 'https://github.com/FriendsOfShopware/FroshPluginUploader/releases/download/${PLUGIN_NAME}/frosh-plugin-upload.phar' -O frosh-plugin-upload.phar
+                run: wget 'https://github.com/FriendsOfShopware/FroshPluginUploader/releases/download/${{ env.PLUGIN_UPLOADER_VERSION }}/frosh-plugin-upload.phar' -O frosh-plugin-upload.phar
 
             -   name: StoreUpdate
                 run: php frosh-plugin-upload.phar ext:update $(pwd)/${{ env.PLUGIN_NAME }}/
@@ -64,7 +64,7 @@ jobs:
                     path: ${{ env.PLUGIN_NAME }}
 
             -   name: getPluginUploader
-                run: wget 'https://github.com/FriendsOfShopware/FroshPluginUploader/releases/download/${PLUGIN_NAME}/frosh-plugin-upload.phar' -O frosh-plugin-upload.phar
+                run: wget 'https://github.com/FriendsOfShopware/FroshPluginUploader/releases/download/${{ env.PLUGIN_UPLOADER_VERSION }}/frosh-plugin-upload.phar' -O frosh-plugin-upload.phar
 
             -   name: Build Zip
                 run: php frosh-plugin-upload.phar ext:zip ${PLUGIN_NAME}
