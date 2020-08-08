@@ -1,3 +1,7 @@
+# 0.2.0
+
+* Kompatiblität mit 6.3
+
 # 0.1.2
 
 * Kompatiblität mit 6.2
