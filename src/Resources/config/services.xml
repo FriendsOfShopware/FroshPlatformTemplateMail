@@ -31,5 +31,9 @@
             <argument type="service" id="Frosh\TemplateMail\Services\CachedMailFinderService.inner"/>
             <argument type="service" id="cache.app.taggable"/>
         </service>
+
+        <service id="Frosh\TemplateMail\Services\StringTemplateRenderer" decorates="Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer">
+            <argument type="service" id="twig"/>
+        </service>
     </services>
 </container>

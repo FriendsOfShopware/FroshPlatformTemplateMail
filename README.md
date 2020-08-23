@@ -30,16 +30,19 @@ Search order in example with sOrder:
 
 custom/plugins/FroshPlatformTemplateMail/src/Resources/views/email/global/order_transaction.state.paid/html.twig
 * HTML Template
+  * custom/plugins/MyTheme/src/Resources/views/email/[en-GB]/order_transaction.state.paid/html.twig (Language Locale)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/html.twig (Saleschannel ID)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/html.twig (Language ID)
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/html.twig (Default)
   * Database saved values
 * Text Template
+  * custom/plugins/MyTheme/src/Resources/views/email/[en-GB]/order_transaction.state.paid/plain.twig (Language Locale)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/plain.twig (Saleschannel ID)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/plain.twig (Language ID)
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/plain.twig (Default)
   * Database saved values
 * Subject Template
+  * custom/plugins/MyTheme/src/Resources/views/email/[en-GB]/order_transaction.state.paid/subject.twig (Language Code)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Saleschannel ID)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Language ID)
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/subject.twig (Default)
