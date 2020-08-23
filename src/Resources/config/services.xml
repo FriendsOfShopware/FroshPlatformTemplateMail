@@ -25,6 +25,7 @@
             <argument type="service" id="twig.loader"/>
             <argument type="tagged" tag="frosh_template_mail.loader"/>
             <argument type="service" id="language.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Translation\Translator"/>
         </service>
 
         <service id="Frosh\TemplateMail\Services\CachedMailFinderService" decorates="Frosh\TemplateMail\Services\MailFinderService">

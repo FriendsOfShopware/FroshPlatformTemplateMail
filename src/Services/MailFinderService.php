@@ -3,6 +3,7 @@
 namespace Frosh\TemplateMail\Services;
 
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
+use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -31,11 +32,21 @@ class MailFinderService implements MailFinderServiceInterface
      */
     private $languageRepository;
 
-    public function __construct(FilesystemLoader $filesystemLoader, iterable $availableLoaders, EntityRepositoryInterface $languageRepository)
-    {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(
+        FilesystemLoader $filesystemLoader,
+        iterable $availableLoaders,
+        EntityRepositoryInterface $languageRepository,
+        Translator $translator
+    ) {
         $this->filesystemLoader = $filesystemLoader;
         $this->availableLoaders = $availableLoaders;
         $this->languageRepository = $languageRepository;
+        $this->translator = $translator;
     }
 
     public function findTemplateByTechnicalName(string $type, string $technicalName, BusinessEvent $businessEvent): ?string
@@ -70,6 +81,8 @@ class MailFinderService implements MailFinderServiceInterface
                     foreach ($searchFolder as $folder) {
                         $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
                         if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
+                            $this->fixTranslator($businessEvent);
+
                             return $content;
                         }
                     }
@@ -78,5 +91,25 @@ class MailFinderService implements MailFinderServiceInterface
         }
 
         return null;
+    }
+
+    private function fixTranslator(BusinessEvent $businessEvent): void
+    {
+        if (!$businessEvent->getEvent()->getSalesChannelId()) {
+            return;
+        }
+
+        $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
+        $criteria->addAssociation('locale');
+
+        /** @var LanguageEntity $language */
+        $language = $this->languageRepository->search($criteria, $businessEvent->getContext())->first();
+
+        $this->translator->injectSettings(
+            $businessEvent->getEvent()->getSalesChannelId(),
+            $businessEvent->getContext()->getLanguageId(),
+            $language->getLocale()->getCode(),
+            $businessEvent->getContext()
+        );
     }
 }
