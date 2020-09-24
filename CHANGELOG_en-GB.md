@@ -1,3 +1,9 @@
+# 0.2.1
+
+* Language codes in template path instead of Ids now possible
+* Twig files can now be included
+* Corrected text blocks when the mail is sent from the admin
+
 # 0.2.0
 
 * Compability mit 6.3
