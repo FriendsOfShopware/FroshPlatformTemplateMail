@@ -80,7 +80,6 @@ class MailFinderService implements MailFinderServiceInterface
                 foreach ($supportedExtensions as $supportedExtension) {
                     foreach ($searchFolder as $folder) {
                         $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
-                        var_dump($filePath);
                         if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
                             $this->fixTranslator($businessEvent);
 
