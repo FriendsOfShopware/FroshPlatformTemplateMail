@@ -1,3 +1,7 @@
+# 0.3.0
+
+* Compability mit 6.3.3.0
+
 # 0.2.1
 
 * Language codes in template path instead of Ids now possible

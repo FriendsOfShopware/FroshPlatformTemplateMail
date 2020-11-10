@@ -22,7 +22,7 @@
         </service>
 
         <service id="Frosh\TemplateMail\Services\MailFinderService">
-            <argument type="service" id="twig.loader"/>
+            <argument type="service" id="twig.loader.native_filesystem"/>
             <argument type="tagged" tag="frosh_template_mail.loader"/>
             <argument type="service" id="language.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Adapter\Translation\Translator"/>

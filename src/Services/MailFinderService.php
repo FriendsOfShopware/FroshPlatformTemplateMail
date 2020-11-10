@@ -67,9 +67,12 @@ class MailFinderService implements MailFinderServiceInterface
         $languages = $this->languageRepository->search($criteria, Context::createDefaultContext())->getElements();
 
         /** @var LanguageEntity $language */
-        foreach ($languages as $language) {
+        foreach (array_reverse($languages) as $language) {
             array_unshift($searchFolder, $language->getLocale()->getCode());
         }
+
+        var_dump($searchFolder);
+        die();
 
         $searchFolder = array_keys(array_flip($searchFolder));
 
@@ -80,6 +83,7 @@ class MailFinderService implements MailFinderServiceInterface
                 foreach ($supportedExtensions as $supportedExtension) {
                     foreach ($searchFolder as $folder) {
                         $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
+                        var_dump($filePath);
                         if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
                             $this->fixTranslator($businessEvent);
 

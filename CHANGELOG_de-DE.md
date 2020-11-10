@@ -1,3 +1,7 @@
+# 0.3.0
+
+* Kompatiblität mit 6.3.3.0
+
 # 0.2.1
 
 * Sprach-Codes im Template Pfad anstatt Ids nun möglich
