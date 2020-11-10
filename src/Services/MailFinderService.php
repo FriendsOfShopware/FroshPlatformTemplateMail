@@ -71,9 +71,6 @@ class MailFinderService implements MailFinderServiceInterface
             array_unshift($searchFolder, $language->getLocale()->getCode());
         }
 
-        var_dump($searchFolder);
-        die();
-
         $searchFolder = array_keys(array_flip($searchFolder));
 
         foreach ($paths as $path) {
