@@ -21,7 +21,6 @@ class FroshPlatformTemplateMail extends Plugin
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new CacheCompilerPass());
-        $container->addCompilerPass(new OrderServiceGeneratorPass());
         parent::build($container);
     }
 }

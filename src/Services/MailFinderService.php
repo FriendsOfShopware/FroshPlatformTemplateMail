@@ -4,6 +4,7 @@ namespace Frosh\TemplateMail\Services;
 
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
+use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -54,7 +55,7 @@ class MailFinderService implements MailFinderServiceInterface
         $paths = $this->filesystemLoader->getPaths();
         $searchFolder = [$businessEvent->getContext()->getLanguageId(), 'global'];
 
-        if ($businessEvent->getContext()->getSource() instanceof Context\SalesChannelApiSource) {
+        if ($businessEvent->getContext()->getSource() instanceof SalesChannelApiSource) {
             array_unshift($searchFolder, $businessEvent->getContext()->getSource()->getSalesChannelId());
         }
 

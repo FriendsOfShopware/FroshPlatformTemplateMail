@@ -1,14 +1,18 @@
+# 0.3.3
+
+* Compatibility 6.3.4.0
+
 # 0.3.2
 
-* Compability mit 6.3.3.0
+* Compatibility 6.3.3.0
 
 # 0.3.1
 
-* Compability mit 6.3.3.0
+* Compatibility 6.3.3.0
 
 # 0.3.0
 
-* Compability mit 6.3.3.0
+* Compatibility 6.3.3.0
 
 # 0.2.1
 
@@ -18,11 +22,11 @@
 
 # 0.2.0
 
-* Compability mit 6.3
+* Compatibility mit 6.3
 
 # 0.1.2
 
-* Compability mit 6.2
+* Compatibility mit 6.2
 
 # 0.1.1
 
