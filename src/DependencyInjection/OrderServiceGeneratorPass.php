@@ -79,11 +79,13 @@ class OrderServiceGeneratorPass implements CompilerPassInterface
                         continue;
                     }
 
+                    // Fetch order context to pass it into the event
+                    $orderContextStmt = new Expression(new Assign($builder->var('orderContext'), $builder->methodCall($builder->var('this'), 'getOrderContext', [$builder->var('context'), $builder->var('order')])));
                     // Fire event
-                    $arg = $builder->new('\\' . MailDataBagFilter::class, [$builder->var('data'), $builder->var('mailTemplate'), $builder->var('context')]);
+                    $arg = $builder->new('\\' . MailDataBagFilter::class, [$builder->var('data'), $builder->var('mailTemplate'), $builder->var('orderContext')]);
                     $newStmt = new Expression($builder->methodCall($propertyFetch, 'dispatch', [$arg]));
 
-                    array_splice($method->stmts, $i, 0, [$newStmt]);
+                    array_splice($method->stmts, $i, 0, [$orderContextStmt, $newStmt]);
                 }
             }
         }
