@@ -28,7 +28,7 @@
         },
         "description": {
             "de-DE": "Erlaubt es die Mail Templates in das Theme abzulegen. Dadurch sind sie versioniert und leichter zu deployen zwischen mehreren Umgebungen. Ebenfalls wird MJML unterstützt",
-            "en-GB": "Allows to store the mail templates in the theme. This makes them versioned and easier to deploy between multiple environments. Also MJML is supported"
+            "en-GB": "Allows to store the mail templates in the theme. This makes them versioned and easier to deploy between multiple environments. Also MJML is supported."
         },
         "manufacturerLink": {
             "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformTemplateMail",
