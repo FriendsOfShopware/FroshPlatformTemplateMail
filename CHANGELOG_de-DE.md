@@ -1,3 +1,7 @@
+# 0.3.4
+
+* Kompatiblität mit 6.3.5.0
+
 # 0.3.3
 
 * Kompatiblität mit 6.3.4.0
