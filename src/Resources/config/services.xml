@@ -8,18 +8,6 @@
         <import resource="loaders.xml"/>
     </imports>
     <services>
-        <service id="Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriber" class="Frosh\TemplateMail\Subscriber\MailSendSubscriber">
-            <argument type="service" id="Shopware\Core\Content\MailTemplate\Service\MailService"/>
-            <argument type="service" id="mail_template.repository"/>
-            <argument type="service" id="Shopware\Core\Content\Media\MediaService"/>
-            <argument type="service" id="media.repository"/>
-            <argument type="service" id="document.repository"/>
-            <argument type="service" id="Shopware\Core\Checkout\Document\DocumentService"/>
-            <argument type="service" id="logger"/>
-            <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="Frosh\TemplateMail\Services\MailFinderService">
             <argument type="service" id="twig.loader.native_filesystem"/>
             <argument type="tagged" tag="frosh_template_mail.loader"/>
@@ -34,6 +22,12 @@
 
         <service id="Frosh\TemplateMail\Services\StringTemplateRenderer" decorates="Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer">
             <argument type="service" id="twig"/>
+        </service>
+
+        <service id="Frosh\TemplateMail\Subscriber\MailDataBagFilterSubscriber">
+            <argument type="service" id="mail_template_type.repository"/>
+            <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
     </services>
 </container>
