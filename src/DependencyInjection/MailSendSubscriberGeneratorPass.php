@@ -17,6 +17,7 @@ use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriber;
+use Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriberConfig;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -31,16 +32,18 @@ class MailSendSubscriberGeneratorPass implements CompilerPassInterface
         $builder = new BuilderFactory();
 
         $phpParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
-        $orderActionNodes = $phpParser->parse(file_get_contents($mailAction->getFileName()));
+        $mailSendNodes = $phpParser->parse(file_get_contents($mailAction->getFileName()));
 
         $nodeFinder = new NodeFinder();
         /** @var Namespace_ $namespace */
 
-        $namespace = $nodeFinder->findFirstInstanceOf($orderActionNodes, Namespace_::class);
+        $namespace = $nodeFinder->findFirstInstanceOf($mailSendNodes, Namespace_::class);
         $namespace->name = new Name(__NAMESPACE__);
 
+        array_unshift($namespace->stmts, $builder->use('\\' . MailSendSubscriberConfig::class)->getNode());
+
         /** @var Class_ $class */
-        $class = $nodeFinder->findFirstInstanceOf($orderActionNodes, Class_::class);
+        $class = $nodeFinder->findFirstInstanceOf($mailSendNodes, Class_::class);
         $class->extends = new Name('\\' . MailSendSubscriber::class);
 
         // EventDispatcher property
@@ -102,7 +105,7 @@ class MailSendSubscriberGeneratorPass implements CompilerPassInterface
 
         $printer = new Standard();
 
-        file_put_contents(__DIR__ . '/MailSendSubscriber.php', $printer->prettyPrintFile($orderActionNodes));
+        file_put_contents(__DIR__ . '/MailSendSubscriber.php', $printer->prettyPrintFile($mailSendNodes));
 
         $container->getDefinition(MailSendSubscriber::class)
             ->setClass(__NAMESPACE__ . '\\MailSendSubscriber')

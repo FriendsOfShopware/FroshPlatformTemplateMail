@@ -1,5 +1,9 @@
 # 0.3.4
 
+* Compatibility with 6.3 and 6.4
+
+# 0.3.4
+
 * Compatibility 6.3.5.0
 
 # 0.3.3
