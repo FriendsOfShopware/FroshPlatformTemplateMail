@@ -26,7 +26,14 @@ class CachedMailFinderService implements MailFinderServiceInterface
 
     public function findTemplateByTechnicalName(string $type, string $technicalName, BusinessEvent $businessEvent): ?string
     {
-        $cacheKey = md5($type . $technicalName . $businessEvent->getName() . json_encode($businessEvent->getConfig()));
+        $cacheKey = md5(
+            $type . 
+            $technicalName . 
+            $businessEvent->getName() . 
+            json_encode($businessEvent->getConfig()) . 
+            $businessEvent->getEvent()->getSalesChannelContext()->getSalesChannel()->getId() . 
+            $businessEvent->getEvent()->getSalesChannelContext()->getSalesChannel()->getLanguageId()
+        );
         return $this->cache->get($cacheKey, function (CacheItem $cacheItem) use ($type, $technicalName, $businessEvent) {
             $cacheItem->expiresAfter(3600);
             return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent);
