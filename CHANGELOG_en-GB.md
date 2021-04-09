@@ -1,4 +1,4 @@
-# 0.3.4
+# 0.4.0
 
 * Compatibility with 6.3 and 6.4
 
