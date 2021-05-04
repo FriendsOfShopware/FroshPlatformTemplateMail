@@ -79,13 +79,44 @@ class MailFinderService implements MailFinderServiceInterface
                 $supportedExtensions = $availableLoader->supportedExtensions();
 
                 foreach ($supportedExtensions as $supportedExtension) {
-                    foreach ($searchFolder as $folder) {
-                        $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
-                        if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
-                            $this->fixTranslator($businessEvent);
+                  $i = 0;
+                    foreach ($searchFolder as $folder) 
+                    {
+                      
+                      if($i + 1 == count($searchFolder)){
+                        $filePath = $path . '/email/' . $searchFolder[0] . '/'. $searchFolder[$i] . '/' . $technicalName . '/' . $type . $supportedExtension;
+                      }
+                      else{
+                        $filePath = $path . '/email/' . $searchFolder[$i+1] . '/'. $searchFolder[$i] . '/' . $technicalName . '/' . $type . $supportedExtension;
+                      }
+                      
+                      if(file_exists($filePath) && $content = $availableLoader->load($filePath)){
+                        $this->fixTranslator($businessEvent);
 
-                            return $content;
-                        }
+                        return $content;
+                      }
+
+                      if($i + 1 == count($searchFolder)){
+                        $filePath = $path . '/email/' . $searchFolder[$i] . '/'. $searchFolder[0] . '/' . $technicalName . '/' . $type . $supportedExtension;
+                      }
+                      else{
+                        $filePath = $path . '/email/' . $searchFolder[$i] . '/'. $searchFolder[$i+1] . '/' . $technicalName . '/' . $type . $supportedExtension;
+                      }
+                      
+                      if(file_exists($filePath) && $content = $availableLoader->load($filePath)){
+                        $this->fixTranslator($businessEvent);
+
+                        return $content;
+                      }
+
+
+                      $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
+                      if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
+                        $this->fixTranslator($businessEvent);
+
+                        return $content;
+                      }                        
+                      $i++;
                     }
                 }
             }
