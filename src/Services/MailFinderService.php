@@ -72,6 +72,13 @@ class MailFinderService implements MailFinderServiceInterface
             array_unshift($searchFolder, $language->getLocale()->getCode());
         }
 
+        if ($businessEvent->getEvent()->getSalesChannelId()) {
+            /** @var LanguageEntity $language */
+            foreach (array_reverse($languages) as $language) {
+                array_unshift($searchFolder, $businessEvent->getEvent()->getSalesChannelId() . '/' . $language->getLocale()->getCode());
+            }
+        }
+
         $searchFolder = array_keys(array_flip($searchFolder));
 
         foreach ($paths as $path) {
@@ -79,44 +86,13 @@ class MailFinderService implements MailFinderServiceInterface
                 $supportedExtensions = $availableLoader->supportedExtensions();
 
                 foreach ($supportedExtensions as $supportedExtension) {
-                  $i = 0;
-                    foreach ($searchFolder as $folder) 
-                    {
-                      
-                      if($i + 1 == count($searchFolder)){
-                        $filePath = $path . '/email/' . $searchFolder[0] . '/'. $searchFolder[$i] . '/' . $technicalName . '/' . $type . $supportedExtension;
-                      }
-                      else{
-                        $filePath = $path . '/email/' . $searchFolder[$i+1] . '/'. $searchFolder[$i] . '/' . $technicalName . '/' . $type . $supportedExtension;
-                      }
-                      
-                      if(file_exists($filePath) && $content = $availableLoader->load($filePath)){
-                        $this->fixTranslator($businessEvent);
+                    foreach ($searchFolder as $folder) {
+                        $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
+                        if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
+                            $this->fixTranslator($businessEvent);
 
-                        return $content;
-                      }
-
-                      if($i + 1 == count($searchFolder)){
-                        $filePath = $path . '/email/' . $searchFolder[$i] . '/'. $searchFolder[0] . '/' . $technicalName . '/' . $type . $supportedExtension;
-                      }
-                      else{
-                        $filePath = $path . '/email/' . $searchFolder[$i] . '/'. $searchFolder[$i+1] . '/' . $technicalName . '/' . $type . $supportedExtension;
-                      }
-                      
-                      if(file_exists($filePath) && $content = $availableLoader->load($filePath)){
-                        $this->fixTranslator($businessEvent);
-
-                        return $content;
-                      }
-
-
-                      $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
-                      if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
-                        $this->fixTranslator($businessEvent);
-
-                        return $content;
-                      }                        
-                      $i++;
+                            return $content;
+                        }
                     }
                 }
             }
