@@ -28,5 +28,5 @@ jobs:
                     export PROJECT_ROOT=/opt/shopware
                     /opt/shopware/bin/console plugin:refresh
                     /opt/shopware/bin/console plugin:install --activate -c ${PLUGIN_NAME}
-                    php /opt/shopware/vendor/bin/phpunit -c /opt/shopware/custom/plugins/${PLUGIN_NAME}
+                    php -d pcov.enabled=1 /opt/shopware/vendor/bin/phpunit -c /opt/shopware/custom/plugins/${PLUGIN_NAME} --coverage-clover clover.xml
 
