@@ -29,6 +29,7 @@ $testProjectDir = getProjectDir();
 /** @var \Composer\Autoload\ClassLoader $loader */
 $loader = require $testProjectDir . '/vendor/autoload.php';
 KernelLifecycleManager::prepare($loader);
+$loader->addPsr4('Frosh\\TemplateMail\\Tests\\', dirname(__DIR__) . '/tests');
 
 if (class_exists('\Shopware\Development\Kernel')) {
     $_SERVER['KERNEL_CLASS'] = '\Shopware\Development\Kernel';

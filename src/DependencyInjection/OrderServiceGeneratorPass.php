@@ -49,6 +49,7 @@ class OrderServiceGeneratorPass implements CompilerPassInterface
         $propertyFetch = $builder->propertyFetch($builder->var('this'), 'froshEventDispatcher');
         $argCount = null;
 
+        // @codeCoverageIgnoreStart
         /** @var ClassMethod $method */
         foreach ($methods as $method) {
             if ($method->name->name === '__construct') {
@@ -87,6 +88,7 @@ class OrderServiceGeneratorPass implements CompilerPassInterface
                 }
             }
         }
+        // @codeCoverageIgnoreEnd
 
         $printer = new Standard();
 

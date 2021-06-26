@@ -62,6 +62,7 @@ class MailSendSubscriberGeneratorPass implements CompilerPassInterface
                 $method->stmts[] = new Expression(new Assign($propertyFetch, $builder->var('froshEventDispatcher')));
             } else if($method->name->name === 'sendMail') {
                 foreach ($method->stmts as $i => $stmt) {
+                    // @codeCoverageIgnoreStart
                     if (!$stmt instanceof Expression) {
                         continue;
                     }
@@ -93,6 +94,7 @@ class MailSendSubscriberGeneratorPass implements CompilerPassInterface
                     if ($stmt->expr->args[0]->value->value !== 'mediaIds') {
                         continue;
                     }
+                    // @codeCoverageIgnoreEnd
 
                     // Fire event
                     $arg = $builder->new('\\' . MailDataBagFilter::class, [$builder->var('data'), $builder->var('mailTemplate'), $builder->methodCall($builder->var('event'), 'getContext')]);
