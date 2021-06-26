@@ -23,6 +23,7 @@ jobs:
             -   name: Run Tests
                 run: |
                     cp -r "./${PLUGIN_NAME}" "/plugins/${PLUGIN_NAME}"
+                    /opt/bin/plugin-uploader ext:prepare "/plugins/${PLUGIN_NAME}"
                     start-mysql
                     export PROJECT_ROOT=/opt/shopware
                     /opt/shopware/bin/console plugin:refresh
