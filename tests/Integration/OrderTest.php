@@ -90,6 +90,31 @@ class OrderTest extends TestCase
         static::assertSame('SUBJECT CONFIRM', $mailSentEvent->getSubject());
     }
 
+    public function testOrderConfirmationMailWithoutTemplates(): void
+    {
+        $this->removeTemplates();
+
+        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
+        $mailSentEvent = null;
+
+        $eventDispatcher->addListener(MailSentEvent::class, function (MailSentEvent $e) use(&$mailSentEvent) {
+            $mailSentEvent = $e;
+        });
+
+        $this->performOrder();
+
+        static::assertNotNull($mailSentEvent, 'Mail did not sent');
+
+        static::assertNotSame(
+            [
+                'text/html' => 'HTML CONFIRM',
+                'text/plain' => "TEXT CONFIRM"
+            ],
+            $mailSentEvent->getContents()
+        );
+        static::assertNotSame('SUBJECT CONFIRM', $mailSentEvent->getSubject());
+    }
+
     private function fillCart(string $contextToken): void
     {
         $cart = $this->getContainer()->get(CartService::class)->createNew($contextToken);
