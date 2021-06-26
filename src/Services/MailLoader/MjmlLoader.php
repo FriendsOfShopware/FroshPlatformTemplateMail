@@ -4,6 +4,7 @@ namespace Frosh\TemplateMail\Services\MailLoader;
 
 use Frosh\TemplateMail\Exception\MjmlCompileError;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 
 class MjmlLoader implements LoaderInterface
@@ -18,22 +19,24 @@ class MjmlLoader implements LoaderInterface
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, Client $client = null)
     {
-        $this->client = new Client();
+        $this->client = $client ?? new Client();
         $this->logger = $logger;
     }
 
     public function load(string $path): string
     {
-        $response = $this->client->post('https://mjml.shyim.de', [
-            'json' => [
-                'mjml' => file_get_contents($path)
-            ]
-        ]);
+        try {
+            $response = $this->client->post('https://mjml.shyim.de', [
+                'json' => [
+                    'mjml' => file_get_contents($path)
+                ]
+            ]);
+        } catch (ServerException $e) {
+            $this->logger->critical('MJML Api is not accessible', ['response' => $e->getResponse()->getBody(), 'code' => $e->getResponse()->getStatusCode()]);
 
-        if ($response->getStatusCode() !== 200) {
-            $this->logger->critical('MJML Api is not accessible', ['response' => $response->getBody(), 'code' => $response->getStatusCode()]);
+            throw $e;
         }
 
         $content = json_decode($response->getBody()->getContents(), true);
