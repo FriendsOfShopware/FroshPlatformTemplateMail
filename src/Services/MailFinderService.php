@@ -4,11 +4,10 @@ namespace Frosh\TemplateMail\Services;
 
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
-use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
-use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Event\BusinessEvent;
+use Shopware\Core\Framework\Event\MailActionInterface;
 use Shopware\Core\System\Language\LanguageEntity;
 use Twig\Loader\FilesystemLoader;
 
@@ -71,7 +70,9 @@ class MailFinderService implements MailFinderServiceInterface
                     foreach ($searchFolder as $folder) {
                         $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
                         if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
-                            $this->fixTranslator($businessEvent);
+                            if ($businessEvent->getEvent() instanceof MailActionInterface) {
+                                $this->fixTranslator($businessEvent);
+                            }
 
                             return $content;
                         }
@@ -85,10 +86,6 @@ class MailFinderService implements MailFinderServiceInterface
 
     private function fixTranslator(BusinessEvent $businessEvent): void
     {
-        if (!$businessEvent->getEvent()->getSalesChannelId()) {
-            return;
-        }
-
         $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
         $criteria->addAssociation('locale');
 

@@ -32,6 +32,9 @@ class MailDataBagFilterSubscriber implements EventSubscriberInterface
         $this->mailFinderService = $mailFinderService;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getSubscribedEvents(): array
     {
         return [
