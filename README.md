@@ -1,6 +1,8 @@
 # Store Shopware mail templates in theme
 
-[![Join the chat at https://gitter.im/FriendsOfShopware/Lobby](https://badges.gitter.im/FriendsOfShopware/Lobby.svg)](https://gitter.im/FriendsOfShopware/Lobby)
+[![codecov](https://codecov.io/gh/FriendsOfShopware/FroshPlatformTemplateMail/branch/master/graph/badge.svg?token=HUPWYZ80YS)](https://codecov.io/gh/FriendsOfShopware/FroshPlatformTemplateMail)
+[![PHPUnit](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/actions/workflows/unit.yml/badge.svg)](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/actions/workflows/unit.yml)
+[![Slack](https://img.shields.io/badge/chat-on%20slack-%23ECB22E)](https://slack.shopware.com?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 This plugin allows to store the mails in theme instead of database. This gives us advantages like
 
@@ -14,7 +16,6 @@ This plugin allows to store the mails in theme instead of database. This gives u
 
 - Shopware 6.1 or newer
 - PHP 7.2
-
 
 ## Installation
 
