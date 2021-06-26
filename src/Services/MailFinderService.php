@@ -14,9 +14,9 @@ use Twig\Loader\FilesystemLoader;
 
 class MailFinderService implements MailFinderServiceInterface
 {
-    const TYPE_HTML = 'html.';
-    const TYPE_PLAIN = 'plain.';
-    const TYPE_SUBJECT = 'subject.';
+    public const TYPE_HTML = 'html.';
+    public const TYPE_PLAIN = 'plain.';
+    public const TYPE_SUBJECT = 'subject.';
 
     /**
      * @var FilesystemLoader
@@ -38,48 +38,30 @@ class MailFinderService implements MailFinderServiceInterface
      */
     private $translator;
 
+    /**
+     * @var SearchPathProvider $searchPathProvider
+     */
+    private $searchPathProvider;
+
     public function __construct(
         FilesystemLoader $filesystemLoader,
         iterable $availableLoaders,
         EntityRepositoryInterface $languageRepository,
-        Translator $translator
+        Translator $translator,
+        SearchPathProvider $searchPathProvider
     ) {
         $this->filesystemLoader = $filesystemLoader;
         $this->availableLoaders = $availableLoaders;
         $this->languageRepository = $languageRepository;
         $this->translator = $translator;
+        $this->searchPathProvider = $searchPathProvider;
     }
 
     public function findTemplateByTechnicalName(string $type, string $technicalName, BusinessEvent $businessEvent): ?string
     {
         $paths = $this->filesystemLoader->getPaths();
-        $searchFolder = [$businessEvent->getContext()->getLanguageId(), 'global'];
 
-        if ($businessEvent->getContext()->getSource() instanceof SalesChannelApiSource) {
-            array_unshift($searchFolder, $businessEvent->getContext()->getSource()->getSalesChannelId());
-        }
-
-        if ($businessEvent->getEvent()->getSalesChannelId()) {
-            array_unshift($searchFolder, $businessEvent->getEvent()->getSalesChannelId());
-        }
-
-        $criteria = new Criteria($businessEvent->getEvent()->getContext()->getLanguageIdChain());
-        $criteria->addAssociation('locale');
-        $languages = $this->languageRepository->search($criteria, Context::createDefaultContext())->getElements();
-
-        /** @var LanguageEntity $language */
-        foreach (array_reverse($languages) as $language) {
-            array_unshift($searchFolder, $language->getLocale()->getCode());
-        }
-
-        if ($businessEvent->getEvent()->getSalesChannelId()) {
-            /** @var LanguageEntity $language */
-            foreach (array_reverse($languages) as $language) {
-                array_unshift($searchFolder, $businessEvent->getEvent()->getSalesChannelId() . '/' . $language->getLocale()->getCode());
-            }
-        }
-
-        $searchFolder = array_keys(array_flip($searchFolder));
+        $searchFolder = $this->searchPathProvider->buildPaths($businessEvent);
 
         foreach ($paths as $path) {
             foreach ($this->availableLoaders as $availableLoader) {

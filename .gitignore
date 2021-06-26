@@ -1,5 +1,7 @@
 .idea
 *.phar
+/.phpunit.result.cache
+/composer.lock
 /vendor
 src/Resources/views/email
 src/DependencyInjection/MailSendSubscriber.php

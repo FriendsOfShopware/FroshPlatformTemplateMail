@@ -20,6 +20,11 @@
             "Frosh\\TemplateMail\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Frosh\\TemplateMail\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "shopware-plugin-class": "Frosh\\TemplateMail\\FroshPlatformTemplateMail",
         "label": {
