@@ -34,20 +34,22 @@ custom/plugins/FroshPlatformTemplateMail/src/Resources/views/email/global/order_
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/html.twig (Saleschannel ID)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/html.twig (Language ID)
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/html.twig (Default)
-  * Database saved values
+  * Database saved values (for right template names search in database table "mail_template_type")
 * Text Template
   * custom/plugins/MyTheme/src/Resources/views/email/[en-GB]/order_transaction.state.paid/plain.twig (Language Locale)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/plain.twig (Saleschannel ID)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/plain.twig (Language ID)
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/plain.twig (Default)
-  * Database saved values
+  * Database saved values (for right template names search in database table "mail_template_type")
 * Subject Template
   * custom/plugins/MyTheme/src/Resources/views/email/[en-GB]/order_transaction.state.paid/subject.twig (Language Code)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Saleschannel ID)
   * custom/plugins/MyTheme/src/Resources/views/email/[ID]/order_transaction.state.paid/subject.twig (Language ID)
   * custom/plugins/MyTheme/src/Resources/views/email/global/order_transaction.state.paid/subject.twig (Default)
-  * Database saved values
+  * Database saved values (for right template names search in database table "mail_template_type")
 
+* You can also nest templates. E.g.:
+  * custom/plugins/MyTheme/src/Resources/views/email/[ID]/[en-GB]/order_transaction.state.paid/html.twig (Saleschannel ID)/(Language Locale)
 
 ## Contributing
 
