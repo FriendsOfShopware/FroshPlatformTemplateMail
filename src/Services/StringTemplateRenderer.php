@@ -77,12 +77,18 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function enableTestMode(): void
     {
         $this->twig->addGlobal('testMode', true);
         $this->twig->disableStrictVariables();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function disableTestMode(): void
     {
         $this->twig->addGlobal('testMode', false);

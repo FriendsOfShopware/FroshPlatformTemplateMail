@@ -8,6 +8,9 @@ use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * @codeCoverageIgnore
+ */
 class MailDataBagFilter extends Event
 {
     /**

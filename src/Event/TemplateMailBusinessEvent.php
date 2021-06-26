@@ -8,6 +8,9 @@ use Shopware\Core\Framework\Event\EventData\EventDataCollection;
 use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
 use Shopware\Core\Framework\Event\MailActionInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class TemplateMailBusinessEvent extends BusinessEvent implements MailActionInterface
 {
     /**
