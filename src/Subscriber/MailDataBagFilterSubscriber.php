@@ -7,6 +7,7 @@ use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
 use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
+use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -69,6 +70,6 @@ class MailDataBagFilterSubscriber implements EventSubscriberInterface
 
     private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): BusinessEvent
     {
-        return new TemplateMailBusinessEvent($dataBag->get('salesChannelId'), $context);
+        return new TemplateMailBusinessEvent($dataBag->get('salesChannelId') ?? Defaults::SALES_CHANNEL, $context);
     }
 }
