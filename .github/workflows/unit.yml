@@ -12,7 +12,7 @@ env:
 jobs:
     phpunit:
         name: Run tests
-        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.4.0
+        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.4.3
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
