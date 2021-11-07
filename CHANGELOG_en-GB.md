@@ -1,3 +1,7 @@
+# 0.4.2
+
+* Compatibility 6.4.6.0
+
 # 0.4.1
 
 * Solved Composer InstalledVersions problem

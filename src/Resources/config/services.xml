@@ -34,5 +34,11 @@
             <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="Frosh\TemplateMail\Subscriber\FlowSubscriber">
+            <argument type="service" id="mail_template_type.repository"/>
+            <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

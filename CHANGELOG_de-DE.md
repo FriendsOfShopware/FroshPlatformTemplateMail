@@ -1,3 +1,7 @@
+# 0.4.2
+
+* Kompatiblität mit 6.4.6.0
+
 # 0.4.1
 
 * Composer InstalledVersion Problem behoben
