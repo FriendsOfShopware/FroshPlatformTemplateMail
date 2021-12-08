@@ -15,7 +15,7 @@ class MjmlLoader implements LoaderInterface
      */
     private $client;
 
-    const MJML_INCLUDE = '/<mj-include.*?path="(.\/\w+)".*?\/>/m';
+    const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
 
     /**
      * @var LoggerInterface
@@ -33,7 +33,6 @@ class MjmlLoader implements LoaderInterface
         $this->logger = $logger;
         $this->cache = $cache;
     }
-
     public function load(string $path): string
     {
         $content = $this->renderMjmlTemplate($path);
@@ -46,19 +45,16 @@ class MjmlLoader implements LoaderInterface
 
         return $content['html'];
     }
-
     public function supportedExtensions(): array
     {
         return ['mjml'];
     }
 
     /**
-     * @param string $string
-     * @param string $folder
+     * @param $string
+     * @param $folder
      *
-     * @return mixed|string
-     *
-     * @throws CompileErrorException
+     * @return array|mixed|string|string[]
      */
     private function parseIncludes($string, $folder)
     {
@@ -73,7 +69,7 @@ class MjmlLoader implements LoaderInterface
                 $fileName = $folder . '/' . $matches[1][$key];
 
                 if (!file_exists($fileName)) {
-                    throw new \Exception(sprintf('File with name "%s", could not be found in path "%s"', $matches[1][$key], $fileName));
+                    throw new MjmlCompileError(sprintf('File with name "%s", could not be found in path "%s"', $matches[1][$key], $fileName));
                 }
 
                 $string = str_replace($match, file_get_contents($fileName), $string);
@@ -82,7 +78,6 @@ class MjmlLoader implements LoaderInterface
 
         return $string;
     }
-
     /**
      * @param string $path
      *
@@ -93,15 +88,12 @@ class MjmlLoader implements LoaderInterface
     private function renderMjmlTemplate(string $path)
     {
         $mjmlTemplate = $this->parseIncludes(file_get_contents($path), dirname($path));
-
         $cacheKey = 'mjml' . md5($mjmlTemplate);
-
         $cacheItem = $this->cache->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
             return $cacheItem->get();
         }
-
         try {
             $response = $this->client->post('https://mjml.shyim.de', [
                 'json' => [
@@ -110,11 +102,14 @@ class MjmlLoader implements LoaderInterface
             ]);
         } catch (ServerException $e) {
             $this->logger->critical('MJML Api is not accessible', ['response' => $e->getResponse()->getBody(), 'code' => $e->getResponse()->getStatusCode()]);
-
             throw $e;
         }
 
         $compileTemplate = json_decode($response->getBody()->getContents(), true);
+
+        if(is_null($compileTemplate)) {
+            $compileTemplate = ""; // ToDo get default mail template.
+        }
 
         $cacheItem->set($compileTemplate);
         $this->cache->save($cacheItem);
