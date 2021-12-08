@@ -7,15 +7,16 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class MjmlLoader implements LoaderInterface
 {
+    const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
+
     /**
      * @var Client
      */
     private $client;
-
-    const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
 
     /**
      * @var LoggerInterface
@@ -27,12 +28,25 @@ class MjmlLoader implements LoaderInterface
      */
     private $cache;
 
+    /**
+     * @param LoggerInterface $logger
+     * @param CacheItemPoolInterface $cache
+     *
+     * @param Client|null $client
+     */
     public function __construct(LoggerInterface $logger, CacheItemPoolInterface $cache, Client $client = null)
     {
         $this->client = $client ?? new Client();
         $this->logger = $logger;
         $this->cache = $cache;
     }
+
+    /**
+     * @param string $path
+     * @return string
+     *
+     * @throws GuzzleException
+     */
     public function load(string $path): string
     {
         $content = $this->renderMjmlTemplate($path);
@@ -45,6 +59,7 @@ class MjmlLoader implements LoaderInterface
 
         return $content['html'];
     }
+
     public function supportedExtensions(): array
     {
         return ['mjml'];
