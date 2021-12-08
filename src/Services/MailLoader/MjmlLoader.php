@@ -10,7 +10,7 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class MjmlLoader implements LoaderInterface
 {
-    const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
+    private const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
 
     /**
      * @var Client
