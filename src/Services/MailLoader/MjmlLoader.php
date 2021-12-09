@@ -58,9 +58,17 @@ class MjmlLoader implements LoaderInterface
 
         $compileTemplate = json_decode($response->getBody()->getContents(), true);
 
-        if (is_null($compileTemplate) || count($compileTemplate) === 0 || !empty($compileTemplate['errors'])) {
+        if (is_null($compileTemplate) || count($compileTemplate) === 0) {
             // Return empty string to load shopware default templates.
             return '';
+        }
+
+        if (!empty($compileTemplate['errors'])) {
+            foreach ($compileTemplate['errors'] as $error) {
+                $this->logger->critical('Error during compiling of MJML templates', ['response' => $error]);
+            }
+
+            throw new MjmlCompileError(implode('\n', $compileTemplate['errors']));
         }
 
         return $compileTemplate['html'];
