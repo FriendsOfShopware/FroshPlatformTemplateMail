@@ -52,20 +52,23 @@ class MjmlLoader implements LoaderInterface
         } catch (ServerException $e) {
             $this->logger->critical('MJML Api is not accessible', ['response' => $e->getResponse()->getBody(), 'code' => $e->getResponse()->getStatusCode()]);
 
-            throw $e;
+            // Return empty string to load shopware default templates.
+            return '';
         }
 
         $compileTemplate = json_decode($response->getBody()->getContents(), true);
 
         if (is_null($compileTemplate) || count($compileTemplate) === 0) {
-            // ToDo: Get default mail template contents.
+            // Return empty string to load shopware default templates.
             return '';
         }
 
         if (!empty($compileTemplate['errors'])) {
             foreach ($compileTemplate['errors'] as $error) {
-                throw new MjmlCompileError($error);
+                $this->logger->critical('Error during compiling of MJML templates', ['response' => $error]);
             }
+
+            throw new MjmlCompileError(implode('\n', $compileTemplate['errors']));
         }
 
         return $compileTemplate['html'];
