@@ -1,3 +1,8 @@
+# 0.4.3
+
+- Add support for `mj_include`, thanks to @memoworker
+- Improved mjml error handling, thanks to @memoworker
+
 # 0.4.2
 
 * Kompatiblität mit 6.4.6.0
