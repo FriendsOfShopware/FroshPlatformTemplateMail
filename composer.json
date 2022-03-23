@@ -1,10 +1,10 @@
 {
     "name": "frosh/frosh-platform-template-mail",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "type": "shopware-platform-plugin",
     "description": "Load mail templates from theme",
     "keywords": [
-        "adminer",
+        "mail",
         "shopware",
         "frosh"
     ],
@@ -46,7 +46,7 @@
     },
     "require": {
         "shopware/core": "~6.3 || ~6.4",
-        "lorenzo/pinky": "^1.0",
+        "lorenzo/pinky": "^1.0.6",
         "nikic/php-parser": "*"
     }
 }

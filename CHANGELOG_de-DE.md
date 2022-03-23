@@ -1,7 +1,11 @@
+# 0.4.4
+
+* Update dependency
+
 # 0.4.3
 
-- Add support for `mj_include`, thanks to @memoworker
-- Improved mjml error handling, thanks to @memoworker
+* Add support for `mj_include`, thanks to @memoworker
+* Improved mjml error handling, thanks to @memoworker
 
 # 0.4.2
 
