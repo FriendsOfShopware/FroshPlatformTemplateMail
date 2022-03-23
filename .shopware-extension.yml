@@ -1,0 +1,15 @@
+build:
+    zip:
+        composer:
+            enabled: true
+        assets:
+            enabled: false #not necessary
+        pack:
+            excludes:
+                paths:
+                    - .idea
+                    - src/DependencyInjection/MailSendSubscriber.php
+                    - src/DependencyInjection/OrderService.php
+                    - var
+                    - .gitignore
+                    - .danger.php
