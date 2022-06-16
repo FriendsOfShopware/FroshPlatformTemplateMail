@@ -40,5 +40,12 @@
             <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="Frosh\TemplateMail\Command\ExportCommand">
+            <call method="setDatabaseConnection">
+                <argument type="service" id="Doctrine\DBAL\Connection"/>
+            </call>
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
