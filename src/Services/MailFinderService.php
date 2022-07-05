@@ -56,7 +56,12 @@ class MailFinderService implements MailFinderServiceInterface
         $this->searchPathProvider = $searchPathProvider;
     }
 
-    public function findTemplateByTechnicalName(string $type, string $technicalName, BusinessEvent $businessEvent): ?string
+    public function findTemplateByTechnicalName(
+        string $type,
+        string $technicalName,
+        BusinessEvent $businessEvent,
+        bool $returnFolder = false
+    ): ?string
     {
         $paths = $this->filesystemLoader->getPaths();
 
@@ -74,7 +79,7 @@ class MailFinderService implements MailFinderServiceInterface
                                 $this->fixTranslator($businessEvent);
                             }
 
-                            return $content;
+                            return $returnFolder ? $filePath : $content;
                         }
                     }
                 }

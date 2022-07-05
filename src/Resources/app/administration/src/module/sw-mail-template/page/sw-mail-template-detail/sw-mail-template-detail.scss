@@ -1,0 +1,15 @@
+.sw-mail-template-detail {
+    &__options-info-wrapper {
+        .sw-field {
+            margin-bottom: 5px;
+        }
+    }
+
+    .sw-code-editor {
+        margin-bottom: 5px;
+    }
+
+    .sw-code-editor + .sw-label {
+        margin-bottom: 32px;
+    }
+}
