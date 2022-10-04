@@ -48,6 +48,11 @@ class MailFinderService implements MailFinderServiceInterface
      */
     private $themeRepository;
 
+    /**
+     * @var EntityRepositoryInterface $pluginRepository
+     */
+    private $pluginRepository;
+
     public function __construct(
         FilesystemLoader $filesystemLoader,
         iterable $availableLoaders,
