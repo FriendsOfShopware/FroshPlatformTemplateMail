@@ -9,6 +9,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\Framework\Event\MailActionInterface;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\Language\LanguageEntity;
 use Twig\Loader\FilesystemLoader;
 
@@ -75,13 +76,16 @@ class MailFinderService implements MailFinderServiceInterface
 
         $searchFolder = $this->searchPathProvider->buildPaths($businessEvent);
 
-        $themePath = $this->connection->fetchOne(
+        $stmt = $this->connection->prepare(
             'SELECT IFNULL(a.path, p.path) AS `path` FROM `theme` AS t '
                     . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
                     . 'LEFT JOIN `plugin` AS p ON p.`name` = t.`technical_name` '
                     . 'LEFT JOIN `app` AS a ON a.`name` = t.`technical_name` '
-                    . 'WHERE tsc.`sales_channel_id` = UNHEX("' . $businessEvent->getSalesChannelId() . '");'
+                    . 'WHERE tsc.`sales_channel_id` = ?;'
         );
+
+        $stmt->bindValue(1, Uuid::fromHexToBytes($businessEvent->getSalesChannelId()));
+        $themePath = $stmt->executeQuery()->fetchOne();
 
         if ($themePath !== null) {
             usort($paths, function ($a, $b) use ($themePath) {
@@ -96,7 +100,6 @@ class MailFinderService implements MailFinderServiceInterface
                 return 0;
             });
         }
-
 
         foreach ($paths as $path) {
             foreach ($this->availableLoaders as $availableLoader) {
