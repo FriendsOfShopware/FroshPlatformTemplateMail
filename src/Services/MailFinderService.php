@@ -7,7 +7,6 @@ use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\Framework\Event\MailActionInterface;
 use Shopware\Core\System\Language\LanguageEntity;
