@@ -6,6 +6,7 @@ use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\Framework\Event\MailActionInterface;
 use Shopware\Core\System\Language\LanguageEntity;
@@ -42,18 +43,27 @@ class MailFinderService implements MailFinderServiceInterface
      */
     private $searchPathProvider;
 
+    /**
+     * @var EntityRepositoryInterface $themeRepository
+     */
+    private $themeRepository;
+
     public function __construct(
         FilesystemLoader $filesystemLoader,
         iterable $availableLoaders,
         EntityRepositoryInterface $languageRepository,
         Translator $translator,
-        SearchPathProvider $searchPathProvider
+        SearchPathProvider $searchPathProvider,
+        EntityRepositoryInterface $themeRepository,
+        EntityRepositoryInterface $pluginRepository
     ) {
         $this->filesystemLoader = $filesystemLoader;
         $this->availableLoaders = $availableLoaders;
         $this->languageRepository = $languageRepository;
         $this->translator = $translator;
         $this->searchPathProvider = $searchPathProvider;
+        $this->themeRepository = $themeRepository;
+        $this->pluginRepository = $pluginRepository;
     }
 
     public function findTemplateByTechnicalName(
@@ -66,6 +76,25 @@ class MailFinderService implements MailFinderServiceInterface
         $paths = $this->filesystemLoader->getPaths();
 
         $searchFolder = $this->searchPathProvider->buildPaths($businessEvent);
+
+        $criteria = (new Criteria)->addFilter(new EqualsFilter('salesChannels.id', $businessEvent->getSalesChannelId()));
+        $searchResult = $this->themeRepository->search($criteria, $businessEvent->getContext());
+
+        $criteria = (new Criteria)->addFilter(new EqualsFilter('name', $searchResult->first()->getTechnicalName()));
+        $searchResult = $this->pluginRepository->search($criteria, $businessEvent->getContext());
+        $themePath = $searchResult->first()->getPath();
+
+        usort($paths, function ($a, $b) use ($themePath) {
+            if (strpos($a, $themePath) !== false) {
+                return -1;
+            }
+
+            if (strpos($b, $themePath) !== false) {
+                return 1;
+            }
+
+            return 0;
+        });
 
         foreach ($paths as $path) {
             foreach ($this->availableLoaders as $availableLoader) {

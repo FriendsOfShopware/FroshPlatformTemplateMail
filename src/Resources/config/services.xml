@@ -18,14 +18,18 @@
             <argument type="service" id="language.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Adapter\Translation\Translator"/>
             <argument type="service" id="Frosh\TemplateMail\Services\SearchPathProvider"/>
+            <argument type="service" id="theme.repository"/>
+            <argument type="service" id="plugin.repository"/>
         </service>
 
-        <service id="Frosh\TemplateMail\Services\CachedMailFinderService" decorates="Frosh\TemplateMail\Services\MailFinderService">
+        <service id="Frosh\TemplateMail\Services\CachedMailFinderService"
+                 decorates="Frosh\TemplateMail\Services\MailFinderService">
             <argument type="service" id="Frosh\TemplateMail\Services\CachedMailFinderService.inner"/>
             <argument type="service" id="cache.app.taggable"/>
         </service>
 
-        <service id="Frosh\TemplateMail\Services\StringTemplateRenderer" decorates="Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer">
+        <service id="Frosh\TemplateMail\Services\StringTemplateRenderer"
+                 decorates="Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer">
             <argument type="service" id="twig"/>
         </service>
 
