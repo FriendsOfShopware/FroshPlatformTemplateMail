@@ -18,8 +18,7 @@
             <argument type="service" id="language.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Adapter\Translation\Translator"/>
             <argument type="service" id="Frosh\TemplateMail\Services\SearchPathProvider"/>
-            <argument type="service" id="theme.repository"/>
-            <argument type="service" id="plugin.repository"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
 
         <service id="Frosh\TemplateMail\Services\CachedMailFinderService"

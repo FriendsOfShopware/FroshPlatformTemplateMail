@@ -2,6 +2,7 @@
 
 namespace Frosh\TemplateMail\Services;
 
+use Doctrine\DBAL\Connection;
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
@@ -44,14 +45,9 @@ class MailFinderService implements MailFinderServiceInterface
     private $searchPathProvider;
 
     /**
-     * @var EntityRepositoryInterface $themeRepository
+     * @var Connection $connection
      */
-    private $themeRepository;
-
-    /**
-     * @var EntityRepositoryInterface $pluginRepository
-     */
-    private $pluginRepository;
+    private $connection;
 
     public function __construct(
         FilesystemLoader $filesystemLoader,
@@ -59,16 +55,14 @@ class MailFinderService implements MailFinderServiceInterface
         EntityRepositoryInterface $languageRepository,
         Translator $translator,
         SearchPathProvider $searchPathProvider,
-        EntityRepositoryInterface $themeRepository,
-        EntityRepositoryInterface $pluginRepository
+        Connection $connection
     ) {
         $this->filesystemLoader = $filesystemLoader;
         $this->availableLoaders = $availableLoaders;
         $this->languageRepository = $languageRepository;
         $this->translator = $translator;
         $this->searchPathProvider = $searchPathProvider;
-        $this->themeRepository = $themeRepository;
-        $this->pluginRepository = $pluginRepository;
+        $this->connection = $connection;
     }
 
     public function findTemplateByTechnicalName(
@@ -82,24 +76,28 @@ class MailFinderService implements MailFinderServiceInterface
 
         $searchFolder = $this->searchPathProvider->buildPaths($businessEvent);
 
-        $criteria = (new Criteria)->addFilter(new EqualsFilter('salesChannels.id', $businessEvent->getSalesChannelId()));
-        $searchResult = $this->themeRepository->search($criteria, $businessEvent->getContext());
+        $themePath = $this->connection->fetchOne(
+            'SELECT IFNULL(a.path, p.path) AS `path` FROM `theme` AS t '
+                    . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
+                    . 'LEFT JOIN `plugin` AS p ON p.`name` = t.`technical_name` '
+                    . 'LEFT JOIN `app` AS a ON a.`name` = t.`technical_name` '
+                    . 'WHERE tsc.`sales_channel_id` = UNHEX("' . $businessEvent->getSalesChannelId() . '");'
+        );
 
-        $criteria = (new Criteria)->addFilter(new EqualsFilter('name', $searchResult->first()->getTechnicalName()));
-        $searchResult = $this->pluginRepository->search($criteria, $businessEvent->getContext());
-        $themePath = $searchResult->first()->getPath();
+        if ($themePath !== null) {
+            usort($paths, function ($a, $b) use ($themePath) {
+                if (strpos($a, $themePath) !== false) {
+                    return -1;
+                }
 
-        usort($paths, function ($a, $b) use ($themePath) {
-            if (strpos($a, $themePath) !== false) {
-                return -1;
-            }
+                if (strpos($b, $themePath) !== false) {
+                    return 1;
+                }
 
-            if (strpos($b, $themePath) !== false) {
-                return 1;
-            }
+                return 0;
+            });
+        }
 
-            return 0;
-        });
 
         foreach ($paths as $path) {
             foreach ($this->availableLoaders as $availableLoader) {
