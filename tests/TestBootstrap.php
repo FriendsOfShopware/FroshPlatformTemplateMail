@@ -12,7 +12,7 @@ function getProjectDir(): string
         return $_ENV['PROJECT_ROOT'];
     }
 
-    $rootDir = __DIR__;
+    $rootDir = dirname(__DIR__, 2);
     $dir = $rootDir;
     while (!\file_exists($dir . '/.env')) {
         if ($dir === \dirname($dir)) {
@@ -31,7 +31,9 @@ $loader = require $testProjectDir . '/vendor/autoload.php';
 KernelLifecycleManager::prepare($loader);
 $loader->addPsr4('Frosh\\TemplateMail\\Tests\\', dirname(__DIR__) . '/tests');
 
-if (class_exists('\Shopware\Development\Kernel')) {
+if (class_exists('\Shopware\Core\Kernel')) {
+    $_SERVER['KERNEL_CLASS'] = '\Shopware\Core\Kernel';
+} else if (class_exists('\Shopware\Development\Kernel')) {
     $_SERVER['KERNEL_CLASS'] = '\Shopware\Development\Kernel';
 } else if(class_exists('Shopware\Production\Kernel')) {
     $_SERVER['KERNEL_CLASS'] = 'Shopware\Production\Kernel';

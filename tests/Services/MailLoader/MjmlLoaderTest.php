@@ -37,8 +37,7 @@ class MjmlLoaderTest extends TestCase
 
         $loader = new MjmlLoader(new NullLogger(), $client);
 
-        static::expectException(ServerException::class);
-        $loader->load(__DIR__ . '/_fixtures/test.mjml');
+        static::assertSame('', $loader->load(__DIR__ . '/_fixtures/test.mjml'));
     }
 
     public function testApiRespondsErrors(): void
