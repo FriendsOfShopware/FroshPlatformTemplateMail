@@ -44,6 +44,13 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="Frosh\TemplateMail\Command\ExportCommand">
+            <call method="setDatabaseConnection">
+                <argument type="service" id="Doctrine\DBAL\Connection"/>
+            </call>
+            <tag name="console.command"/>
+        </service>
+
         <service id="Frosh\TemplateMail\Extension\Content\MailTemplate\MailTemplateExtension">
             <tag name="shopware.entity.extension"/>
         </service>
