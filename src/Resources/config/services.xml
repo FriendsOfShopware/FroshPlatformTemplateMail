@@ -45,9 +45,7 @@
         </service>
 
         <service id="Frosh\TemplateMail\Command\ExportCommand">
-            <call method="setDatabaseConnection">
-                <argument type="service" id="Doctrine\DBAL\Connection"/>
-            </call>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
             <tag name="console.command"/>
         </service>
 

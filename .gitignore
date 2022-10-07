@@ -3,6 +3,6 @@
 /.phpunit.result.cache
 /composer.lock
 /vendor
-src/Resources/views/email
+src/Resources/views/
 src/DependencyInjection/MailSendSubscriber.php
 src/DependencyInjection/OrderService.php
