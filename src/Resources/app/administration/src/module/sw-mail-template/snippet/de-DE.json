@@ -1,0 +1,14 @@
+{
+    "sw-mail-template": {
+        "list": {
+            "columnTemplateMail": "Theme",
+            "columnTechnicalName": "Technischer Name"
+        },
+        "frosh": {
+            "noTemplate": "Kein Mail Template im Theme vorhanden",
+            "subject": "Mail Template für \"Betreff\" im Ordner: {folder}",
+            "plain": "Mail Template für \"Text\" im Ordner: {folder}",
+            "html": "Mail Template für \"HTML\" im Ordner: {folder}"
+        }
+    }
+}

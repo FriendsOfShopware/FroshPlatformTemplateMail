@@ -1,5 +1,7 @@
 # Store Shopware mail templates in theme
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/FriendsOfShopware/FroshPlatformTemplateMail)
+
 [![codecov](https://codecov.io/gh/FriendsOfShopware/FroshPlatformTemplateMail/branch/master/graph/badge.svg?token=HUPWYZ80YS)](https://codecov.io/gh/FriendsOfShopware/FroshPlatformTemplateMail)
 [![PHPUnit](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/actions/workflows/unit.yml/badge.svg)](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/actions/workflows/unit.yml)
 [![Slack](https://img.shields.io/badge/chat-on%20slack-%23ECB22E)](https://slack.shopware.com?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)

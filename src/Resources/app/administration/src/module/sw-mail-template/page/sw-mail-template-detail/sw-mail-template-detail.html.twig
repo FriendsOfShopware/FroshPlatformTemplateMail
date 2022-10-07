@@ -1,0 +1,32 @@
+{% block sw_mail_template_options_form_subject_field %}
+    {% parent %}
+    <sw-label
+        appearance="circle"
+        :variant="mailTemplate.extensions.froshTemplateMail.subject ? 'success' : 'warning'"
+        v-tooltip="getFroshTooltip('subject', mailTemplate.extensions.froshTemplateMail.subject)"
+    >
+        <sw-icon name="small-exclamationmark" small />
+    </sw-label>
+{% endblock %}
+
+{% block sw_mail_template_mail_text_form_content_plain_field %}
+    {% parent %}
+    <sw-label
+        appearance="circle"
+        :variant="mailTemplate.extensions.froshTemplateMail.plain ? 'success' : 'warning'"
+        v-tooltip="getFroshTooltip('plain', mailTemplate.extensions.froshTemplateMail.plain)"
+    >
+        <sw-icon name="default-text-editor-align-left" small />
+    </sw-label>
+{% endblock %}
+
+{% block sw_mail_template_mail_text_form_content_html_field %}
+    {% parent %}
+    <sw-label
+        appearance="circle"
+        :variant="mailTemplate.extensions.froshTemplateMail.html ? 'success' : 'warning'"
+        v-tooltip="getFroshTooltip('html', mailTemplate.extensions.froshTemplateMail.html)"
+    >
+        <sw-icon name="default-text-code" small />
+    </sw-label>
+{% endblock %}
