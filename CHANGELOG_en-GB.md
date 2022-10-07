@@ -1,3 +1,8 @@
+# 0.4.5
+
+* Added command to export all templates to folder
+* Changed the template directories to use first the active theme
+
 # 0.4.4
 
 * Update dependency
