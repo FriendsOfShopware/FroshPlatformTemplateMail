@@ -9,6 +9,7 @@ use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTy
 use Shopware\Core\Content\MailTemplate\MailTemplateEntity;
 use Shopware\Core\Content\MailTemplate\MailTemplateEvents;
 use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityLoadedEvent;
@@ -46,7 +47,14 @@ class MailTemplateSubscriber implements EventSubscriberInterface
 
     public function onMailTemplatesLoaded(EntityLoadedEvent $event): void
     {
-        $businessEvent = new TemplateMailBusinessEvent(Defaults::SALES_CHANNEL, $event->getContext());
+        $source = $event->getContext()->getSource();
+        $salesChannelId = Defaults::SALES_CHANNEL;
+
+        if ($source instanceof SalesChannelApiSource) {
+            $salesChannelId = $source->getSalesChannelId();
+        }
+
+        $businessEvent = new TemplateMailBusinessEvent($salesChannelId, $event->getContext());
         $context = Context::createDefaultContext();
 
         /** @var MailTemplateTypeCollection $mailTemplateTypes */
