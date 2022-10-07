@@ -16,7 +16,10 @@ class ExportCommand extends Command
     protected static $defaultName = 'frosh:template-mail:export';
     protected static $defaultDescription = 'Export mail templates from database to file system';
 
-    private Connection $connection;
+    /**
+     * @var Connection
+     */
+    private $connection;
 
     public function __construct(Connection $connection)
     {
@@ -24,7 +27,7 @@ class ExportCommand extends Command
         $this->connection = $connection;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addArgument('directory', InputArgument::REQUIRED, 'Target directory');
