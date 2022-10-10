@@ -2,9 +2,10 @@ name: PHPUnit
 on:
     push:
         branches:
-            - 'master'
+            - '*'
         tags:
             - '*'
+    pull_request:
 
 env:
     PLUGIN_NAME: FroshPlatformTemplateMail
