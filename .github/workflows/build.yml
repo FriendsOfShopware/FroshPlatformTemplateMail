@@ -1,4 +1,4 @@
-name: BuildPlugin
+name: Build extension
 on:
     push:
         branches:
@@ -6,10 +6,9 @@ on:
 
 jobs:
     build:
-        uses: FriendsOfShopware/actions/.github/workflows/store.yml@main
+        uses: FriendsOfShopware/actions/.github/workflows/store-shopware-cli.yml@main
         with:
             extensionName: ${{ github.event.repository.name }}
-            shopwareVersion: '6.4.0'
         secrets:
             accountUser: ${{ secrets.ACCOUNT_USER }}
             accountPassword: ${{ secrets.ACCOUNT_PASSWORD }}
