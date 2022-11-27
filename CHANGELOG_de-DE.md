@@ -1,3 +1,7 @@
+# 1.0.0
+
+* Removed subscriber generator and use shopware core event
+
 # 0.4.5
 
 * Added command to export all templates to folder
