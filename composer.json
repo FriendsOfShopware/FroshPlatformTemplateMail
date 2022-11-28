@@ -46,7 +46,6 @@
     },
     "require": {
         "shopware/core": "~6.4.1",
-        "lorenzo/pinky": "^1.0.6",
-        "nikic/php-parser": "*"
+        "lorenzo/pinky": "^1.0.6"
     }
 }

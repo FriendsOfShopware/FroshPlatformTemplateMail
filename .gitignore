@@ -4,5 +4,4 @@
 /composer.lock
 /vendor
 src/Resources/views/
-src/DependencyInjection/MailSendSubscriber.php
-src/DependencyInjection/OrderService.php
+src/Resources/public/

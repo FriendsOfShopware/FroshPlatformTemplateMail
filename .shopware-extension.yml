@@ -3,13 +3,12 @@ build:
         composer:
             enabled: true
         assets:
-            enabled: false #not necessary
+            enabled: true
+            enable_es_build_for_admin: true
+            enable_es_build_for_storefront: true
         pack:
             excludes:
                 paths:
                     - .idea
-                    - src/DependencyInjection/MailSendSubscriber.php
-                    - src/DependencyInjection/OrderService.php
                     - var
                     - .gitignore
-                    - .danger.php
