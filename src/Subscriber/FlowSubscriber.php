@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
@@ -7,48 +7,27 @@ use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
-use Shopware\Core\Content\MailTemplate\Event\MailSendSubscriberBridgeEvent;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class FlowSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EntityRepository
-     */
-    private $mailTemplateTypeRepository;
-
-    /**
-     * @var MailFinderServiceInterface
-     */
-    private $mailFinderService;
-
     public function __construct(
-        EntityRepository $mailTemplateTypeRepository,
-        MailFinderServiceInterface $mailFinderService
-    )
-    {
-        $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
-        $this->mailFinderService = $mailFinderService;
+        private readonly EntityRepository $mailTemplateTypeRepository,
+        private readonly MailFinderServiceInterface $mailFinderService
+    ) {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         if (class_exists(FlowSendMailActionEvent::class)) {
             return [
-                FlowSendMailActionEvent::class => 'onFlowSendMailActionEvent'
-            ];
-        }
-
-        if (class_exists(MailSendSubscriberBridgeEvent::class)) {
-            return [
-                MailSendSubscriberBridgeEvent::class => 'onMailSendSubscriberBridgeEvent'
+                FlowSendMailActionEvent::class => 'onFlowSendMailActionEvent',
             ];
         }
 
@@ -57,18 +36,18 @@ class FlowSubscriber implements EventSubscriberInterface
 
     public function onFlowSendMailActionEvent(FlowSendMailActionEvent $event): void
     {
-        $this->sendMail($event->getDataBag(), $event->getMailTemplate()->getMailTemplateTypeId(), $event->getContext());
+        $mailTemplateTypeId = $event->getMailTemplate()->getMailTemplateTypeId();
+        if ($mailTemplateTypeId === null) {
+            return;
+        }
+
+        $this->sendMail($event->getDataBag(), $mailTemplateTypeId, $event->getContext());
     }
 
-    public function onMailSendSubscriberBridgeEvent(MailSendSubscriberBridgeEvent $event): void
-    {
-        $this->sendMail($event->getDataBag(), $event->getMailTemplate()->getMailTemplateTypeId(), $event->getContext());
-    }
-
-    public function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context)
+    public function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context): void
     {
         /** @var MailTemplateTypeEntity $mailTemplateType */
-        $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context) ->first();
+        $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context)->first();
 
         $technicalName = $mailTemplateType->getTechnicalName();
         $event = $this->createBusinessEventFromBag($dataBag, $context);
@@ -90,8 +69,13 @@ class FlowSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): BusinessEvent
+    private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): TemplateMailBusinessEvent
     {
-        return new TemplateMailBusinessEvent($dataBag->get('salesChannelId') ?? Defaults::SALES_CHANNEL, $context);
+        $salesChannelId = $dataBag->get('salesChannelId');
+
+        return new TemplateMailBusinessEvent(
+            \is_string($salesChannelId) ? $salesChannelId : Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
+            $context
+        );
     }
 }

@@ -11,7 +11,7 @@ class InkyLoaderTest extends TestCase
 {
     public function testLoadingWorks(): void
     {
-        if (!extension_loaded('xsl')) {
+        if (!\extension_loaded('xsl')) {
             static::markTestSkipped('XSL extension is required');
         }
 

@@ -29,7 +29,7 @@ class MjmlLoaderTest extends TestCase
     public function testApiIsNotAvailable(): void
     {
         $mock = new MockHandler([
-            new ServerException('Error Communicating with Server', new Request('GET', 'test'), new Response(500))
+            new ServerException('Error Communicating with Server', new Request('GET', 'test'), new Response(500)),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -43,7 +43,7 @@ class MjmlLoaderTest extends TestCase
     public function testApiRespondsErrors(): void
     {
         $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], json_encode(['errors' => ['some error happend']]))
+            new Response(200, ['Content-Type' => 'application/json'], json_encode(['errors' => ['some error happend']])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);

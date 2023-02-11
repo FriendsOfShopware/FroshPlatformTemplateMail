@@ -1,41 +1,29 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Command;
 
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
+#[AsCommand('frosh:template-mail:export', 'Export mail templates from database to file system')]
 class ExportCommand extends Command
 {
-    protected static $defaultName = 'frosh:template-mail:export';
-    protected static $defaultDescription = 'Export mail templates from database to file system';
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
         parent::__construct();
-        $this->connection = $connection;
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->addArgument('directory', InputArgument::REQUIRED, 'Target directory');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $directory = $input->getArgument('directory');
+        if (!is_string($directory)) {
+            throw new \RuntimeException('Directory is not a string');
+        }
 
         $query = <<<'SQL'
 SELECT 
@@ -54,6 +42,7 @@ SQL;
 
         $fs = new Filesystem();
 
+        /** @var array{content_plain: string, content_html: string, subject: string, technical_name: string, locale: string} $record */
         foreach ($records as $record) {
             $templateDir = sprintf('%s/%s/%s', $directory, $record['locale'], $record['technical_name']);
 
@@ -72,5 +61,11 @@ SQL;
         $output->writeln('Files has been exported');
 
         return self::SUCCESS;
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->addArgument('directory', InputArgument::REQUIRED, 'Target directory');
     }
 }

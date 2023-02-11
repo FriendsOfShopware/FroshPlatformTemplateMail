@@ -1,52 +1,39 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use Shopware\Core\Framework\Event\BusinessEvent;
+use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class CachedMailFinderService implements MailFinderServiceInterface
 {
-    /**
-     * @var MailFinderServiceInterface
-     */
-    private $mailFinderService;
-
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    public function __construct(MailFinderServiceInterface $mailFinderService, CacheInterface $cache)
-    {
-        $this->mailFinderService = $mailFinderService;
-        $this->cache = $cache;
+    public function __construct(
+        private readonly MailFinderServiceInterface $mailFinderService,
+        private readonly CacheInterface $cache
+    ) {
     }
 
     public function findTemplateByTechnicalName(
         string $type,
         string $technicalName,
-        BusinessEvent $businessEvent,
+        TemplateMailBusinessEvent $businessEvent,
         bool $returnFolder = false
-    ): ?string
-    {
-        $salesChannelId = '';
-
-        if (method_exists($businessEvent, 'getSalesChannelId')) {
-            $salesChannelId = $businessEvent->getSalesChannelId();
-        }
+    ): ?string {
+        $salesChannelId = $businessEvent->getSalesChannelId();
 
         $cacheKey = md5(
-            $type .
-            $technicalName .
-            $businessEvent->getName() .
-            json_encode($businessEvent->getConfig()) .
-            $salesChannelId .
-            $businessEvent->getContext()->getLanguageId()
+            $type
+            . $technicalName
+            . $businessEvent->getStorableFlow()->getName()
+            . json_encode($businessEvent->getStorableFlow()->getConfig(), \JSON_THROW_ON_ERROR)
+            . $salesChannelId
+            . $businessEvent->getContext()->getLanguageId()
         );
+
         return $this->cache->get($cacheKey, function (CacheItem $cacheItem) use ($type, $technicalName, $businessEvent) {
             $cacheItem->expiresAfter(3600);
+
             return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent);
         });
     }

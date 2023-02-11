@@ -2,6 +2,7 @@
 
 namespace Frosh\TemplateMail\Services;
 
+use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 use Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException;
 use Shopware\Core\Framework\Context;
 use Twig\Environment;
@@ -12,24 +13,12 @@ use Twig\Loader\ChainLoader;
 
 class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer
 {
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private Environment $twig;
 
-    /**
-     * @var Environment
-     */
-    private $platformTwig;
+    private ArrayLoader $arrayLoader;
 
-    /**
-     * @var ArrayLoader
-     */
-    private $arrayLoader;
-
-    public function __construct(Environment $environment)
+    public function __construct(private readonly Environment $platformTwig)
     {
-        $this->platformTwig = $environment;
         $this->initialize();
     }
 
@@ -42,7 +31,7 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
         $this->twig->setCache(false);
         $this->disableTestMode();
         foreach ($this->platformTwig->getExtensions() as $extension) {
-            if ($this->twig->hasExtension(\get_class($extension))) {
+            if ($this->twig->hasExtension($extension::class)) {
                 continue;
             }
             $this->twig->addExtension($extension);
@@ -63,7 +52,7 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
     /**
      * @throws StringTemplateRenderingException
      */
-    public function render(string $templateSource, array $data, Context $context): string
+    public function render(string $templateSource, array $data, Context $context, bool $htmlEscape = true): string
     {
         $name = md5($templateSource);
         $this->arrayLoader->setTemplate($name, $templateSource);
@@ -77,18 +66,14 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
         }
     }
 
-    /**
-     * @codeCoverageIgnore
-     */
+    #[CodeCoverageIgnore]
     public function enableTestMode(): void
     {
         $this->twig->addGlobal('testMode', true);
         $this->twig->disableStrictVariables();
     }
 
-    /**
-     * @codeCoverageIgnore
-     */
+    #[CodeCoverageIgnore]
     public function disableTestMode(): void
     {
         $this->twig->addGlobal('testMode', false);

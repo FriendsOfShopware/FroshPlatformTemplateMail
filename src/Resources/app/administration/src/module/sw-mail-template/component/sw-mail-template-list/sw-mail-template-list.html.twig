@@ -52,21 +52,21 @@
                     :variant="item.extensions.froshTemplateMail.subject ? 'success' : 'warning'"
                     v-tooltip="getFroshTooltip('subject', item.extensions.froshTemplateMail.subject)"
                 >
-                    <sw-icon name="small-exclamationmark" small />
+                    <sw-icon name="regular-exclamation-s" small />
                 </sw-label>
                 <sw-label
                     appearance="circle"
                     :variant="item.extensions.froshTemplateMail.plain ? 'success' : 'warning'"
                     v-tooltip="getFroshTooltip('plain', item.extensions.froshTemplateMail.plain)"
                 >
-                    <sw-icon name="default-text-editor-align-left" small />
+                    <sw-icon name="regular-align-left" small />
                 </sw-label>
                 <sw-label
                     appearance="circle"
                     :variant="item.extensions.froshTemplateMail.html ? 'success' : 'warning'"
                     v-tooltip="getFroshTooltip('html', item.extensions.froshTemplateMail.html)"
                 >
-                    <sw-icon name="default-text-code" small />
+                    <sw-icon name="regular-code" small />
                 </sw-label>
             </template>
             {% endblock %}
