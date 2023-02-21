@@ -51,8 +51,8 @@ class SearchPathProviderTest extends TestCase
                 '98432def39fc4624b33213a56b8c944d', // Sales channel
                 'en-GB', // Language code
                 '2fbb5fe2e29a4d70aa5854ce7ce3e20b', // Language id
-                'global' // Global
-            ]
+                'global', // Global
+            ],
         ];
 
         // With sales channel source
@@ -64,20 +64,19 @@ class SearchPathProviderTest extends TestCase
                 '98432def39fc4624b33213a56b8c944d', // Sales channel
                 'en-GB', // Language code
                 '2fbb5fe2e29a4d70aa5854ce7ce3e20b', // Language id
-                'global' // Global
-            ]
+                'global', // Global
+            ],
         ];
     }
 
     private function createEvent(bool $salesChannelSource = false): BusinessEvent
     {
         $context = new Context(
-            $salesChannelSource ? new SalesChannelApiSource(Defaults::SALES_CHANNEL) : new SystemSource()
+            $salesChannelSource ? new SalesChannelApiSource(Defaults::SALES_CHANNEL_TYPE_STOREFRONT) : new SystemSource()
         );
 
-        $innerEvent = new ContactFormEvent($context, Defaults::SALES_CHANNEL, new MailRecipientStruct([]), new DataBag());
+        $innerEvent = new ContactFormEvent($context, Defaults::SALES_CHANNEL_TYPE_STOREFRONT, new MailRecipientStruct([]), new DataBag());
 
         return new BusinessEvent('mail', $innerEvent, []);
     }
-
 }

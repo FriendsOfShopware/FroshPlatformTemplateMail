@@ -1,7 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Extension\Content\MailTemplate;
-
 
 use Shopware\Core\Content\MailTemplate\MailTemplateDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityExtension;

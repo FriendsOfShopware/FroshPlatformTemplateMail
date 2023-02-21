@@ -23,7 +23,7 @@ trait SetupExampleTemplatesTrait
         $resources = $this->getResourcesFolder();
         foreach ($this->tplFiles as $tplFile => $content) {
             $file = $resources . '/' . $tplFile;
-            $folder = dirname($file);
+            $folder = \dirname($file);
             $fs->mkdir($folder);
 
             $fs->dumpFile($file, $content);
@@ -46,6 +46,6 @@ trait SetupExampleTemplatesTrait
 
     private function getResourcesFolder(): string
     {
-        return dirname(__DIR__, 2) . '/src/Resources/views/email/';
+        return \dirname(__DIR__, 2) . '/src/Resources/views/email/';
     }
 }

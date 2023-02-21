@@ -3,18 +3,16 @@
 namespace Frosh\TemplateMail;
 
 use Frosh\TemplateMail\DependencyInjection\CacheCompilerPass;
+use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 use Shopware\Core\Framework\Plugin;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 // @codeCoverageIgnoreStart
-if (file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
+if (file_exists(\dirname(__DIR__) . '/vendor/autoload.php')) {
+    require_once \dirname(__DIR__) . '/vendor/autoload.php';
 }
 // @codeCoverageIgnoreEnd
-
-/**
- * @codeCoverageIgnore
- */
+#[CodeCoverageIgnore]
 class FroshPlatformTemplateMail extends Plugin
 {
     public function build(ContainerBuilder $container): void

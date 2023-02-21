@@ -1,29 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services\MailLoader;
 
-use Psr\Log\LoggerInterface;
+use function Pinky\transformFile;
 
 class InkyLoader implements LoaderInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     public function load(string $path): ?string
     {
-//        try {
-            return (\Pinky\transformFile($path))->saveHTML();
-//        } catch (\Throwable $e) {
-//            $this->logger->critical(sprintf('Cannot process file %s with Pinky', $path), ['exception' => $e]);
-//            return null;
-//        }
+        return (transformFile($path))->saveHTML() ?: null;
     }
 
     public function supportedExtensions(): array

@@ -16,13 +16,11 @@ use Shopware\Core\Content\MailTemplate\Service\Event\MailSentEvent;
 use Shopware\Core\Content\Product\Aggregate\ProductVisibility\ProductVisibilityDefinition;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\Test\TestCaseBase\CountryAddToSalesChannelTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\MailTemplateTestBehaviour;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
-use Shopware\Core\System\SalesChannel\Aggregate\SalesChannelDomain\SalesChannelDomainDefinition;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -39,15 +37,7 @@ class OrderTest extends TestCase
      */
     private $salesChannelContext;
 
-    /**
-     * @var OrderService
-     */
-    private $orderService;
-
-    /**
-     * @var EntityRepositoryInterface
-     */
-    private $orderRepository;
+    private ?object $orderService = null;
 
     protected function setUp(): void
     {
@@ -55,14 +45,12 @@ class OrderTest extends TestCase
 
         $this->orderService = $this->getContainer()->get(OrderService::class);
 
-        $this->orderRepository = $this->getContainer()->get('order.repository');
-
         $this->addCountriesToSalesChannel();
 
         $contextFactory = $this->getContainer()->get(SalesChannelContextFactory::class);
         $this->salesChannelContext = $contextFactory->create(
             '',
-            Defaults::SALES_CHANNEL,
+            Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
             [SalesChannelContextService::CUSTOMER_ID => $this->createCustomer('Jon', 'Doe')]
         );
     }
@@ -72,7 +60,7 @@ class OrderTest extends TestCase
         $eventDispatcher = $this->getContainer()->get('event_dispatcher');
         $mailSentEvent = null;
 
-        $eventDispatcher->addListener(MailSentEvent::class, function (MailSentEvent $e) use(&$mailSentEvent) {
+        $eventDispatcher->addListener(MailSentEvent::class, function (MailSentEvent $e) use (&$mailSentEvent): void {
             $mailSentEvent = $e;
         });
 
@@ -83,7 +71,7 @@ class OrderTest extends TestCase
         static::assertSame(
             [
                 'text/html' => 'HTML CONFIRM',
-                'text/plain' => "TEXT CONFIRM"
+                'text/plain' => 'TEXT CONFIRM',
             ],
             $mailSentEvent->getContents()
         );
@@ -119,7 +107,7 @@ class OrderTest extends TestCase
             'visibilities' => [
                 [
                     'id' => $productId,
-                    'salesChannelId' => Defaults::SALES_CHANNEL,
+                    'salesChannelId' => Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
                     'visibility' => ProductVisibilityDefinition::VISIBILITY_ALL,
                 ],
             ],
@@ -161,7 +149,7 @@ class OrderTest extends TestCase
 
         $customer = [
             'id' => $customerId,
-            'salesChannelId' => Defaults::SALES_CHANNEL,
+            'salesChannelId' => Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
             'defaultShippingAddress' => [
                 'id' => $customerId,
                 'firstName' => $firstName,

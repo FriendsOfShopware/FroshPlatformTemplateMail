@@ -1,15 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use Shopware\Core\Framework\Event\BusinessEvent;
+use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
 
 interface MailFinderServiceInterface
 {
     public function findTemplateByTechnicalName(
         string $type,
         string $technicalName,
-        BusinessEvent $businessEvent,
-        bool $returnFolder
+        TemplateMailBusinessEvent $businessEvent,
+        bool $returnFolder = false
     ): ?string;
 }

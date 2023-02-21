@@ -15,7 +15,7 @@ class CachedMailFinderServiceTest extends TestCase
     public function testCachingWorks(): void
     {
         $mailFinder = $this->createMock(MailFinderService::class);
-        $mailFinder->method('findTemplateByTechnicalName')->willReturnCallback(function () { return (string) microtime(true); });
+        $mailFinder->method('findTemplateByTechnicalName')->willReturnCallback(fn () => (string) microtime(true));
 
         $cachedMailFinder = new CachedMailFinderService($mailFinder, new ArrayAdapter());
         $event = $this->createMock(TemplateMailBusinessEvent::class);
@@ -23,7 +23,6 @@ class CachedMailFinderServiceTest extends TestCase
         $event->method('getSalesChannelId')->willReturn('foo');
         $event->method('getContext')->willReturn(Context::createDefaultContext());
         $event->method('getConfig')->willReturn([]);
-
 
         $time = $cachedMailFinder->findTemplateByTechnicalName('', '', $event);
         static::assertSame($time, $cachedMailFinder->findTemplateByTechnicalName('', '', $event));

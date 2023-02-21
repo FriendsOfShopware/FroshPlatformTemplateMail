@@ -1,33 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Event;
 
+use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\Framework\Event\EventData\EventDataCollection;
 use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
-use Shopware\Core\Framework\Event\MailActionInterface;
 
 /**
  * @codeCoverageIgnore
  */
-class TemplateMailBusinessEvent extends BusinessEvent implements MailActionInterface
+class TemplateMailBusinessEvent extends FlowSendMailActionEvent
 {
-    /**
-     * @var string
-     */
-    private $salesChannelId;
-
-    /**
-     * @var Context
-     */
-    private $context;
-
-    public function __construct(string $salesChannelId, Context $context)
-    {
-        $this->salesChannelId = $salesChannelId;
-        $this->context = $context;
-        parent::__construct('action.send.mail', $this);
+    public function __construct(
+        private readonly string $salesChannelId,
+        private readonly Context $context
+    ) {
     }
 
     public static function getAvailableData(): EventDataCollection
@@ -45,7 +33,7 @@ class TemplateMailBusinessEvent extends BusinessEvent implements MailActionInter
         return new MailRecipientStruct([]);
     }
 
-    public function getSalesChannelId(): ?string
+    public function getSalesChannelId(): string
     {
         return $this->salesChannelId;
     }
