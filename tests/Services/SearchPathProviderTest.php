@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Services;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\SearchPathProvider;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Defaults;
@@ -18,22 +18,21 @@ use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\System\Language\LanguageEntity;
 use Shopware\Core\System\Locale\LocaleEntity;
 use Shopware\Core\Test\TestDefaults;
+use Shopware\Tests\Unit\Common\Stubs\DataAbstractionLayer\StaticEntityRepository;
 
 class SearchPathProviderTest extends TestCase
 {
     /**
      * @dataProvider eventProvider
      */
-    public function testPaths(TemplateMailBusinessEvent $event, array $expectedPaths): void
+    public function testPaths(TemplateMailContext $event, array $expectedPaths): void
     {
-        $repository = $this->createMock(EntityRepository::class);
-
         $language = new LanguageEntity();
         $language->setId(Defaults::LANGUAGE_SYSTEM);
         $locale = new LocaleEntity();
         $locale->setCode('en-GB');
         $language->setLocale($locale);
-        $repository->method('search')->willReturn(new EntitySearchResult('language', 1, new EntityCollection([$language]), null, new Criteria(), Context::createDefaultContext()));
+        $repository = new StaticEntityRepository([new EntityCollection([$language])]);
 
         $provider = new SearchPathProvider($repository);
         static::assertSame($expectedPaths, $provider->buildPaths($event));
@@ -68,12 +67,12 @@ class SearchPathProviderTest extends TestCase
         ];
     }
 
-    private function createEvent(bool $salesChannelSource = false): TemplateMailBusinessEvent
+    private function createEvent(bool $salesChannelSource = false): TemplateMailContext
     {
         $context = new Context(
             $salesChannelSource ? new SalesChannelApiSource(TestDefaults::SALES_CHANNEL) : new SystemSource()
         );
 
-        return new TemplateMailBusinessEvent(TestDefaults::SALES_CHANNEL, $context);
+        return new TemplateMailContext(TestDefaults::SALES_CHANNEL, $context);
     }
 }

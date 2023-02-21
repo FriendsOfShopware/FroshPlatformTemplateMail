@@ -2,14 +2,14 @@
 
 namespace Frosh\TemplateMail\Services;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 
 interface MailFinderServiceInterface
 {
     public function findTemplateByTechnicalName(
-        string $type,
-        string $technicalName,
-        TemplateMailBusinessEvent $businessEvent,
-        bool $returnFolder = false
+        string              $type,
+        string              $technicalName,
+        TemplateMailContext $businessEvent,
+        bool                $returnFolder = false
     ): ?string;
 }

@@ -2,7 +2,7 @@
 
 namespace Frosh\TemplateMail\Services;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -15,18 +15,16 @@ class CachedMailFinderService implements MailFinderServiceInterface
     }
 
     public function findTemplateByTechnicalName(
-        string $type,
-        string $technicalName,
-        TemplateMailBusinessEvent $businessEvent,
-        bool $returnFolder = false
+        string              $type,
+        string              $technicalName,
+        TemplateMailContext $businessEvent,
+        bool                $returnFolder = false
     ): ?string {
         $salesChannelId = $businessEvent->getSalesChannelId();
 
         $cacheKey = md5(
             $type
             . $technicalName
-            . $businessEvent->getStorableFlow()->getName()
-            . json_encode($businessEvent->getStorableFlow()->getConfig(), \JSON_THROW_ON_ERROR)
             . $salesChannelId
             . $businessEvent->getContext()->getLanguageId()
         );

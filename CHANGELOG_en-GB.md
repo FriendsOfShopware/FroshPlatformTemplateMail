@@ -1,3 +1,7 @@
+# 2.0.1
+
+* Fix mail template module in administration in production mode
+
 # 2.0.0
 
 - Shopware 6.5 compatibility

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Services\MailLoader;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\CachedMailFinderService;
 use Frosh\TemplateMail\Services\MailFinderService;
 use PHPUnit\Framework\TestCase;
@@ -18,12 +18,9 @@ class CachedMailFinderServiceTest extends TestCase
         $mailFinder->method('findTemplateByTechnicalName')->willReturnCallback(fn () => (string) microtime(true));
 
         $cachedMailFinder = new CachedMailFinderService($mailFinder, new ArrayAdapter());
-        $event = $this->createMock(TemplateMailBusinessEvent::class);
-        $event->method('getName')->willReturn('foo');
-        $event->method('getSalesChannelId')->willReturn('foo');
-        $event->method('getContext')->willReturn(Context::createDefaultContext());
+        $context = new TemplateMailContext('1234', Context::createDefaultContext());
 
-        $time = $cachedMailFinder->findTemplateByTechnicalName('', '', $event);
-        static::assertSame($time, $cachedMailFinder->findTemplateByTechnicalName('', '', $event));
+        $time = $cachedMailFinder->findTemplateByTechnicalName('', '', $context);
+        static::assertSame($time, $cachedMailFinder->findTemplateByTechnicalName('', '', $context));
     }
 }

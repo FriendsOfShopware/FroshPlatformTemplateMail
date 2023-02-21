@@ -2,7 +2,7 @@
 
 namespace Frosh\TemplateMail\Subscriber;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
@@ -42,7 +42,7 @@ class MailTemplateSubscriber implements EventSubscriberInterface
             $salesChannelId = $source->getSalesChannelId();
         }
 
-        $businessEvent = new TemplateMailBusinessEvent($salesChannelId, $event->getContext());
+        $businessEvent = new TemplateMailContext($salesChannelId, $event->getContext());
         $context = Context::createDefaultContext();
 
         /** @var MailTemplateTypeCollection $mailTemplateTypes */
