@@ -25,13 +25,9 @@ class FlowSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        if (class_exists(FlowSendMailActionEvent::class)) {
-            return [
-                FlowSendMailActionEvent::class => 'onFlowSendMailActionEvent',
-            ];
-        }
-
-        return [];
+        return [
+            FlowSendMailActionEvent::class => 'onFlowSendMailActionEvent',
+        ];
     }
 
     public function onFlowSendMailActionEvent(FlowSendMailActionEvent $event): void

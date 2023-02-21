@@ -1,3 +1,7 @@
+# 2.0.0
+
+- Shopware 6.5 compatibility
+
 # 1.0.0
 
 * Removed subscriber generator and use shopware core event
