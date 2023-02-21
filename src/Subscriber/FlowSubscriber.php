@@ -2,7 +2,7 @@
 
 namespace Frosh\TemplateMail\Subscriber;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
@@ -46,7 +46,7 @@ class FlowSubscriber implements EventSubscriberInterface
         $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context)->first();
 
         $technicalName = $mailTemplateType->getTechnicalName();
-        $event = $this->createBusinessEventFromBag($dataBag, $context);
+        $event = $this->createTemplateMailContext($dataBag, $context);
 
         $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $event);
         $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $event);
@@ -65,11 +65,11 @@ class FlowSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): TemplateMailBusinessEvent
+    private function createTemplateMailContext(ParameterBag $dataBag, Context $context): TemplateMailContext
     {
         $salesChannelId = $dataBag->get('salesChannelId');
 
-        return new TemplateMailBusinessEvent(
+        return new TemplateMailContext(
             \is_string($salesChannelId) ? $salesChannelId : Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
             $context
         );

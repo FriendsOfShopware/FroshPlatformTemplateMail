@@ -2,7 +2,7 @@
 
 namespace Frosh\TemplateMail\Services;
 
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -15,7 +15,7 @@ class SearchPathProvider
     {
     }
 
-    public function buildPaths(TemplateMailBusinessEvent $businessEvent): array
+    public function buildPaths(TemplateMailContext $businessEvent): array
     {
         $searchFolder = [$businessEvent->getContext()->getLanguageId(), 'global'];
 

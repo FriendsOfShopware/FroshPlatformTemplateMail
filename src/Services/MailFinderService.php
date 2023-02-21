@@ -3,7 +3,7 @@
 namespace Frosh\TemplateMail\Services;
 
 use Doctrine\DBAL\Connection;
-use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -32,10 +32,10 @@ class MailFinderService implements MailFinderServiceInterface
     }
 
     public function findTemplateByTechnicalName(
-        string $type,
-        string $technicalName,
-        TemplateMailBusinessEvent $businessEvent,
-        bool $returnFolder = false
+        string              $type,
+        string              $technicalName,
+        TemplateMailContext $businessEvent,
+        bool                $returnFolder = false
     ): ?string {
         $paths = $this->filesystemLoader->getPaths();
 
@@ -86,7 +86,7 @@ class MailFinderService implements MailFinderServiceInterface
         return null;
     }
 
-    private function fixTranslator(TemplateMailBusinessEvent $businessEvent): void
+    private function fixTranslator(TemplateMailContext $businessEvent): void
     {
         $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
         $criteria->addAssociation('locale');
