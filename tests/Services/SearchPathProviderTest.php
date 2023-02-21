@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Services;
 
+use Frosh\TemplateMail\Event\TemplateMailBusinessEvent;
 use Frosh\TemplateMail\Services\SearchPathProvider;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Content\ContactForm\Event\ContactFormEvent;
@@ -19,13 +20,14 @@ use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\System\Language\LanguageEntity;
 use Shopware\Core\System\Locale\LocaleEntity;
+use Shopware\Core\Test\TestDefaults;
 
 class SearchPathProviderTest extends TestCase
 {
     /**
      * @dataProvider eventProvider
      */
-    public function testPaths(BusinessEvent $event, array $expectedPaths): void
+    public function testPaths(TemplateMailBusinessEvent $event, array $expectedPaths): void
     {
         $repository = $this->createMock(EntityRepository::class);
 
@@ -69,14 +71,12 @@ class SearchPathProviderTest extends TestCase
         ];
     }
 
-    private function createEvent(bool $salesChannelSource = false): BusinessEvent
+    private function createEvent(bool $salesChannelSource = false): TemplateMailBusinessEvent
     {
         $context = new Context(
-            $salesChannelSource ? new SalesChannelApiSource(Defaults::SALES_CHANNEL_TYPE_STOREFRONT) : new SystemSource()
+            $salesChannelSource ? new SalesChannelApiSource(TestDefaults::SALES_CHANNEL) : new SystemSource()
         );
 
-        $innerEvent = new ContactFormEvent($context, Defaults::SALES_CHANNEL_TYPE_STOREFRONT, new MailRecipientStruct([]), new DataBag());
-
-        return new BusinessEvent('mail', $innerEvent, []);
+        return new TemplateMailBusinessEvent(TestDefaults::SALES_CHANNEL, $context);
     }
 }

@@ -2,16 +2,10 @@
 
 use Shopware\Core\TestBootstrapper;
 
-$testBootstrapper = null;
-if (is_readable('/opt/share/shopware/tests/TestBootstrapper.php')) {
-    $testBootstrapper = require '/opt/share/shopware/tests/TestBootstrapper.php';
-} else {
-    $testBootstrapper = new TestBootstrapper();
-}
-
-return $testBootstrapper
+$loader = (new TestBootstrapper())
     ->setLoadEnvFile(true)
-    ->setForceInstallPlugins(true)
     ->addActivePlugins('FroshPlatformTemplateMail')
     ->bootstrap()
     ->getClassLoader();
+
+$loader->addPsr4('Frosh\\TemplateMail\\Tests\\', __DIR__);

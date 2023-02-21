@@ -45,7 +45,6 @@
         }
     },
     "require": {
-        "ext-xsl": "*",
         "shopware/core": "~6.5.0",
         "lorenzo/pinky": "^1.0.9"
     }

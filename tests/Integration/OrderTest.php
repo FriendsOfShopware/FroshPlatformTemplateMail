@@ -24,6 +24,7 @@ use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Shopware\Core\Test\TestDefaults;
 
 class OrderTest extends TestCase
 {
@@ -50,7 +51,7 @@ class OrderTest extends TestCase
         $contextFactory = $this->getContainer()->get(SalesChannelContextFactory::class);
         $this->salesChannelContext = $contextFactory->create(
             '',
-            Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
+            TestDefaults::SALES_CHANNEL,
             [SalesChannelContextService::CUSTOMER_ID => $this->createCustomer('Jon', 'Doe')]
         );
     }
@@ -107,7 +108,7 @@ class OrderTest extends TestCase
             'visibilities' => [
                 [
                     'id' => $productId,
-                    'salesChannelId' => Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
+                    'salesChannelId' => TestDefaults::SALES_CHANNEL,
                     'visibility' => ProductVisibilityDefinition::VISIBILITY_ALL,
                 ],
             ],
@@ -149,7 +150,7 @@ class OrderTest extends TestCase
 
         $customer = [
             'id' => $customerId,
-            'salesChannelId' => Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
+            'salesChannelId' => TestDefaults::SALES_CHANNEL,
             'defaultShippingAddress' => [
                 'id' => $customerId,
                 'firstName' => $firstName,
@@ -162,9 +163,9 @@ class OrderTest extends TestCase
             ],
             'defaultBillingAddressId' => $customerId,
             'defaultPaymentMethodId' => $paymentMethodId,
-            'groupId' => Defaults::FALLBACK_CUSTOMER_GROUP,
+            'groupId' => TestDefaults::FALLBACK_CUSTOMER_GROUP,
             'email' => Uuid::randomHex() . '@example.com',
-            'password' => 'not',
+            'password' => 'nott1234',
             'firstName' => $firstName,
             'lastName' => $lastName,
             'salutationId' => $salutationId,

@@ -22,7 +22,6 @@ class CachedMailFinderServiceTest extends TestCase
         $event->method('getName')->willReturn('foo');
         $event->method('getSalesChannelId')->willReturn('foo');
         $event->method('getContext')->willReturn(Context::createDefaultContext());
-        $event->method('getConfig')->willReturn([]);
 
         $time = $cachedMailFinder->findTemplateByTechnicalName('', '', $event);
         static::assertSame($time, $cachedMailFinder->findTemplateByTechnicalName('', '', $event));
