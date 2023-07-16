@@ -2,39 +2,38 @@ name: PHPUnit
 on:
     push:
         branches:
-            - 'master'
+            - 'main'
         tags-ignore:
             - '*'
     pull_request:
 
-env:
-    PLUGIN_NAME: FroshPlatformTemplateMail
-
 jobs:
     phpunit:
         name: Run tests
-        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.5.0
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shopware-version:
+                    - 'v6.5.2.0'
+                    - 'v6.5.3.2'
+                    - 'trunk'
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
-                with:
-                    path: ${{ env.PLUGIN_NAME }}
+            - name: Setup Shopware
+              uses: FriendsOfShopware/setup-shopware@main
+              with:
+                shopware-version: ${{ matrix.shopware-version }}
+                php-version: 8.1
 
-            -   name: Run Tests
-                run: |
-                    cp -r "./${PLUGIN_NAME}" "/plugins/${PLUGIN_NAME}"
-                    shopware-cli extension prepare "/plugins/${PLUGIN_NAME}"
-                    start-mysql
-                    export PROJECT_ROOT=/opt/shopware
-                    /opt/shopware/bin/console plugin:refresh
-                    /opt/shopware/bin/console plugin:install --activate -c ${PLUGIN_NAME}
-                    cd /opt/shopware/custom/plugins/${PLUGIN_NAME}
-                    php -d pcov.enabled=1 /opt/shopware/vendor/bin/phpunit --coverage-clover clover.xml
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  path: custom/plugins/FroshPlatformTemplateMail
 
-            - uses: codecov/codecov-action@v1
+            - name: Run Tests
+              run: php -d pcov.enabled=1 ./vendor/bin/phpunit -c custom/plugins/FroshPlatformTemplateMail/phpunit.xml  --coverage-clover clover.xml
+
+            - name: Upload coverage
+              uses: codecov/codecov-action@v1
               with:
                 file: ./clover.xml
-                root_dir: /plugins/FroshPlatformTemplateMail
-                working-directory: /plugins/FroshPlatformTemplateMail
-
