@@ -11,9 +11,19 @@ jobs:
     phpunit:
         name: Run tests
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shopware-version:
+                    - 'v6.5.2.0'
+                    - 'v6.5.3.2'
+                    - 'trunk'
         steps:
             - name: Setup Shopware
               uses: FriendsOfShopware/setup-shopware@main
+              with:
+                shopware-version: ${{ matrix.shopware-version }}
+                php-version: 8.1
 
             - name: Checkout
               uses: actions/checkout@v3
