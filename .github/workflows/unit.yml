@@ -2,13 +2,10 @@ name: PHPUnit
 on:
     push:
         branches:
-            - 'master'
+            - 'main'
         tags-ignore:
             - '*'
     pull_request:
-
-env:
-    PLUGIN_NAME: FroshPlatformTemplateMail
 
 jobs:
     phpunit:
@@ -16,25 +13,26 @@ jobs:
         container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.5.0
         runs-on: ubuntu-latest
         steps:
+            - name: Setup Shopware
+              uses: FriendsOfShopware/setup-shopware@main
+              
+            -
+                name: Install Shopware CLI
+                uses: FriendsOfShopware/shopware-cli-action@v1
+                env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
             -   name: Checkout
                 uses: actions/checkout@v3
                 with:
-                    path: ${{ env.PLUGIN_NAME }}
+                    path: custom/plugins/FroshPlatformTemplateMail
+                    
+            - name: Prepare Plugin
+              run: shopware-cli extension prepare custom/plugins/FroshPlatformTemplateMail
 
-            -   name: Run Tests
-                run: |
-                    cp -r "./${PLUGIN_NAME}" "/plugins/${PLUGIN_NAME}"
-                    shopware-cli extension prepare "/plugins/${PLUGIN_NAME}"
-                    start-mysql
-                    export PROJECT_ROOT=/opt/shopware
-                    /opt/shopware/bin/console plugin:refresh
-                    /opt/shopware/bin/console plugin:install --activate -c ${PLUGIN_NAME}
-                    cd /opt/shopware/custom/plugins/${PLUGIN_NAME}
-                    php -d pcov.enabled=1 /opt/shopware/vendor/bin/phpunit --coverage-clover clover.xml
+            - name: Run Tests
+              run: php -d pcov.enabled=1 ./vendor/bin/phpunit -c custom/plugins/FroshPlatformTemplateMail/phpunit.xml  --coverage-clover clover.xml
 
             - uses: codecov/codecov-action@v1
               with:
                 file: ./clover.xml
-                root_dir: /plugins/FroshPlatformTemplateMail
-                working-directory: /plugins/FroshPlatformTemplateMail
-
