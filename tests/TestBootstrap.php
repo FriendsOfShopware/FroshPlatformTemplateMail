@@ -3,7 +3,7 @@
 use Shopware\Core\TestBootstrapper;
 
 $loader = (new TestBootstrapper())
-    ->setLoadEnvFile(true)
+    ->addCallingPlugin()
     ->addActivePlugins('FroshPlatformTemplateMail')
     ->bootstrap()
     ->getClassLoader();
