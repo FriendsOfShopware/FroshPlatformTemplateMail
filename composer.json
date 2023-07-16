@@ -45,7 +45,6 @@
         }
     },
     "require": {
-        "shopware/core": "~6.5.0",
-        "lorenzo/pinky": "^1.0.9"
+        "shopware/core": "~6.5.0"
     }
 }

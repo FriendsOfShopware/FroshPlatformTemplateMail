@@ -14,9 +14,4 @@ class FroshPlatformTemplateMail extends Plugin
 
         parent::build($container);
     }
-
-    public function executeComposerCommands(): bool
-    {
-        return true;
-    }
 }

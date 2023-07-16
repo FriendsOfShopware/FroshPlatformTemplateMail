@@ -13,10 +13,5 @@
             <tag name="frosh_template_mail.loader"/>
             <argument type="service" id="monolog.logger"/>
         </service>
-
-        <service id="Frosh\TemplateMail\Services\MailLoader\InkyLoader">
-            <tag name="frosh_template_mail.loader"/>
-            <argument type="service" id="monolog.logger"/>
-        </service>
     </services>
 </container>
