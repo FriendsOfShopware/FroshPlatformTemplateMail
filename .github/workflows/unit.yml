@@ -10,7 +10,6 @@ on:
 jobs:
     phpunit:
         name: Run tests
-        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.5.0
         runs-on: ubuntu-latest
         steps:
             - name: Setup Shopware
