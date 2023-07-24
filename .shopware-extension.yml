@@ -1,3 +1,6 @@
+changelog:
+    enabled: true
+
 build:
     zip:
         composer:
