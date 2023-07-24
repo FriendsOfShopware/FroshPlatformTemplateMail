@@ -50,6 +50,7 @@
         <service id="Frosh\TemplateMail\Subscriber\MailTemplateSubscriber">
             <argument type="service" id="mail_template_type.repository"/>
             <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
+
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

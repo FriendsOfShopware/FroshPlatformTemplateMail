@@ -27,12 +27,13 @@ class CachedMailFinderService implements MailFinderServiceInterface
             . $technicalName
             . $salesChannelId
             . $businessEvent->getContext()->getLanguageId()
+            . $returnFolder
         );
 
-        return $this->cache->get($cacheKey, function (CacheItem $cacheItem) use ($type, $technicalName, $businessEvent) {
+        return $this->cache->get($cacheKey, function (CacheItem $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder) {
             $cacheItem->expiresAfter(3600);
 
-            return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent);
+            return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent, $returnFolder);
         });
     }
 }
