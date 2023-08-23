@@ -11,7 +11,8 @@
 
         <service id="Frosh\TemplateMail\Services\MailLoader\MjmlLoader">
             <tag name="frosh_template_mail.loader"/>
-            <argument type="service" id="monolog.logger"/>
+            <argument key="$mjmlServer">%frosh_platform_template_mail.mjml_server%</argument>
+            <argument key="$logger" type="service" id="monolog.logger"/>
         </service>
     </services>
 </container>
