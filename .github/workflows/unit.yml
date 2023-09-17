@@ -31,7 +31,9 @@ jobs:
                   path: custom/plugins/FroshPlatformTemplateMail
 
             - name: Run Tests
-              run: php -d pcov.enabled=1 ./vendor/bin/phpunit -c custom/plugins/FroshPlatformTemplateMail/phpunit.xml  --coverage-clover clover.xml
+              run: |
+                  cd custom/plugins/FroshPlatformTemplateMail/
+                  php -d pcov.enabled=1 ../../../vendor/bin/phpunit --coverage-clover clover.xml
 
             - name: Upload coverage
               uses: codecov/codecov-action@v3
@@ -39,5 +41,5 @@ jobs:
                 CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
                 files: ./clover.xml
-                root_dir: custom/plugins/FroshPlatformTemplateMail/
-                working-directory: custom/plugins/FroshPlatformTemplateMail/
+                root_dir: /home/runner/work/FroshPlatformTemplateMail/FroshPlatformTemplateMail/custom/plugins/FroshPlatformTemplateMail/
+                working-directory: /home/runner/work/FroshPlatformTemplateMail/FroshPlatformTemplateMail/custom/plugins/FroshPlatformTemplateMail/
