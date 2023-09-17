@@ -39,3 +39,5 @@ jobs:
                 CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
                 files: ./clover.xml
+                root_dir: custom/plugins/FroshPlatformTemplateMail/
+                working-directory: custom/plugins/FroshPlatformTemplateMail/
