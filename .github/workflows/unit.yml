@@ -38,4 +38,4 @@ jobs:
               env:
                 CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
-                file: ./clover.xml
+                files: ./clover.xml
