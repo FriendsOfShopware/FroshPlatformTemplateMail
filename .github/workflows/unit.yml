@@ -34,6 +34,8 @@ jobs:
               run: php -d pcov.enabled=1 ./vendor/bin/phpunit -c custom/plugins/FroshPlatformTemplateMail/phpunit.xml  --coverage-clover clover.xml
 
             - name: Upload coverage
-              uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v3
+              env:
+                CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
                 file: ./clover.xml
