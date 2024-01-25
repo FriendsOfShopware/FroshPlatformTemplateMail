@@ -2,6 +2,9 @@
 
 namespace Frosh\TemplateMail\Services\MailLoader;
 
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+
+#[AsAlias]
 class TwigLoader implements LoaderInterface
 {
     public function load(string $path): ?string

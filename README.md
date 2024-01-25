@@ -14,8 +14,8 @@ This plugin allows to store the mails in theme instead of database. This gives u
 
 ## Requirements
 
-- Shopware 6.4.1 or newer
-- PHP 7.4
+- Shopware 6.6.0 or newer
+- PHP 8.2
 
 ## Installation
 

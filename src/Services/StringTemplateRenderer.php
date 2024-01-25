@@ -5,12 +5,14 @@ namespace Frosh\TemplateMail\Services;
 use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 use Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException;
 use Shopware\Core\Framework\Context;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Extension\CoreExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 
+#[AsDecorator(\Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer::class)]
 class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer
 {
     private Environment $twig;

@@ -14,8 +14,7 @@ class MjmlLoader implements LoaderInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly Client $client = new Client(
-        )
+        private readonly Client $client = new Client()
     ) {
     }
 
