@@ -11,14 +11,10 @@ use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Api\Context\SystemSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
-use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\System\Language\LanguageEntity;
 use Shopware\Core\System\Locale\LocaleEntity;
 use Shopware\Core\Test\TestDefaults;
-use Shopware\Tests\Unit\Common\Stubs\DataAbstractionLayer\StaticEntityRepository;
+use Shopware\Core\Test\Stub\DataAbstractionLayer\StaticEntityRepository;
 
 class SearchPathProviderTest extends TestCase
 {
@@ -38,12 +34,12 @@ class SearchPathProviderTest extends TestCase
         static::assertSame($expectedPaths, $provider->buildPaths($event));
     }
 
-    public function eventProvider(): iterable
+    public static function eventProvider(): iterable
     {
         // Without sales channel source
 
         yield [
-            $this->createEvent(),
+            self::createEvent(),
             [
                 '98432def39fc4624b33213a56b8c944d/en-GB', // Sales channel and language combo
                 '98432def39fc4624b33213a56b8c944d', // Sales channel
@@ -56,7 +52,7 @@ class SearchPathProviderTest extends TestCase
         // With sales channel source
 
         yield [
-            $this->createEvent(true),
+            self::createEvent(true),
             [
                 '98432def39fc4624b33213a56b8c944d/en-GB', // Sales channel and language combo
                 '98432def39fc4624b33213a56b8c944d', // Sales channel
@@ -67,7 +63,7 @@ class SearchPathProviderTest extends TestCase
         ];
     }
 
-    private function createEvent(bool $salesChannelSource = false): TemplateMailContext
+    private static function createEvent(bool $salesChannelSource = false): TemplateMailContext
     {
         $context = new Context(
             $salesChannelSource ? new SalesChannelApiSource(TestDefaults::SALES_CHANNEL) : new SystemSource()

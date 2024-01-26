@@ -21,11 +21,7 @@ class MailTemplateExtensionTest extends TestCase
         $collection
             ->expects(static::once())
             ->method('add')
-            ->withConsecutive(
-                [
-                    (new StringField('frosh_template_mail', 'froshTemplateMail'))->addFlags(new Runtime()),
-                ]
-            );
+            ->with((new StringField('frosh_template_mail', 'froshTemplateMail'))->addFlags(new Runtime()));
 
         (new MailTemplateExtension())->extendFields($collection);
     }

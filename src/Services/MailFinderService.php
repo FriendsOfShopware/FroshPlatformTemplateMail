@@ -5,13 +5,18 @@ namespace Frosh\TemplateMail\Services;
 use Doctrine\DBAL\Connection;
 use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
+use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\Language\LanguageEntity;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Twig\Loader\FilesystemLoader;
 
+#[AsAlias]
 class MailFinderService implements MailFinderServiceInterface
 {
     final public const TYPE_HTML = 'html.';
@@ -22,20 +27,23 @@ class MailFinderService implements MailFinderServiceInterface
      * @param LoaderInterface[] $availableLoaders
      */
     public function __construct(
+        #[Autowire(service: 'twig.loader.native_filesystem')]
         private readonly FilesystemLoader $filesystemLoader,
+        #[TaggedIterator('frosh_template_mail.loader')]
         private readonly iterable $availableLoaders,
         private readonly EntityRepository $languageRepository,
-        private readonly Translator $translator,
+        #[Autowire(service: Translator::class)]
+        private readonly AbstractTranslator $translator,
         private readonly SearchPathProvider $searchPathProvider,
         private readonly Connection $connection
     ) {
     }
 
     public function findTemplateByTechnicalName(
-        string              $type,
-        string              $technicalName,
+        string $type,
+        string $technicalName,
         TemplateMailContext $businessEvent,
-        bool                $returnFolder = false
+        bool $returnFolder = false
     ): ?string {
         $paths = $this->filesystemLoader->getPaths();
 

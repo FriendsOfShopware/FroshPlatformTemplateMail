@@ -15,11 +15,11 @@ use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class FlowSubscriber implements EventSubscriberInterface
+readonly class FlowSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly EntityRepository $mailTemplateTypeRepository,
-        private readonly MailFinderServiceInterface $mailFinderService
+        private EntityRepository $mailTemplateTypeRepository,
+        private MailFinderServiceInterface $mailFinderService
     ) {
     }
 

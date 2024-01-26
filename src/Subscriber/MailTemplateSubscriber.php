@@ -18,11 +18,11 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Struct\ArrayStruct;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class MailTemplateSubscriber implements EventSubscriberInterface
+readonly class MailTemplateSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly EntityRepository $mailTemplateTypeRepository,
-        private readonly MailFinderServiceInterface $mailFinderService
+        private EntityRepository $mailTemplateTypeRepository,
+        private MailFinderServiceInterface $mailFinderService
     ) {
     }
 
