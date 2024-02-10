@@ -7,10 +7,6 @@ on:
 
 jobs:
   build:
-    uses: FriendsOfShopware/actions/.github/workflows/store-shopware-cli.yml@main
+    uses: shopware/github-actions/.github/workflows/build-zip.yml@main
     with:
       extensionName: ${{ github.event.repository.name }}
-    secrets:
-      accountUser: ${{ secrets.ACCOUNT_USER }}
-      accountPassword: ${{ secrets.ACCOUNT_PASSWORD }}
-      ghToken: ${{ secrets.GITHUB_TOKEN }}

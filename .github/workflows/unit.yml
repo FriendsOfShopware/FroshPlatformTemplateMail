@@ -3,7 +3,6 @@ on:
     push:
         branches:
             - 'main'
-            - 'feature/6.6-compatibility'
         tags-ignore:
             - '*'
     pull_request:
@@ -11,35 +10,16 @@ on:
 jobs:
     phpunit:
         name: Run tests
-        runs-on: ubuntu-latest
         strategy:
             fail-fast: false
             matrix:
                 shopware-version:
-                    - 'v6.6.0.0-rc1'
-        steps:
-            - name: Setup Shopware
-              uses: FriendsOfShopware/setup-shopware@main
-              with:
-                shopware-version: ${{ matrix.shopware-version }}
-                php-version: 8.2
-                php-extensions: pcov
-
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  path: custom/plugins/FroshPlatformTemplateMail
-
-            - name: Run Tests
-              run: |
-                  cd custom/plugins/FroshPlatformTemplateMail/
-                  php -d pcov.enabled=1 ../../../vendor/bin/phpunit --coverage-clover clover.xml
-
-            - name: Upload coverage
-              uses: codecov/codecov-action@v3
-              env:
-                CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-              with:
-                files: ./clover.xml
-                root_dir: /home/runner/work/FroshPlatformTemplateMail/FroshPlatformTemplateMail/custom/plugins/FroshPlatformTemplateMail/
-                working-directory: /home/runner/work/FroshPlatformTemplateMail/FroshPlatformTemplateMail/custom/plugins/FroshPlatformTemplateMail/
+                    - '6.5.x'
+                    - 'v6.6.0.0-rc2'
+        uses: shopware/github-actions/.github/workflows/phpunit.yml@main
+        with:
+          extensionName: ${{ github.event.repository.name }}
+          shopwareVersion: ${{ matrix.shopware-version }}
+          uploadCoverage: true
+        secrets:
+          codecovToken: ${{ secrets.CODECOV_TOKEN }}
