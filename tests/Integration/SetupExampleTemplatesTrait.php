@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Integration;
@@ -7,7 +8,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 trait SetupExampleTemplatesTrait
 {
-    private $tplFiles = [
+    /**
+     * @var array<string, string>
+     */
+    private array $tplFiles = [
         'global/order_confirmation_mail/html.twig' => 'HTML CONFIRM',
         'global/order_confirmation_mail/plain.twig' => 'TEXT CONFIRM',
         'global/order_confirmation_mail/subject.twig' => 'SUBJECT CONFIRM',

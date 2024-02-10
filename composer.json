@@ -46,5 +46,8 @@
     },
     "require": {
         "shopware/core": "~6.5.0 || ~6.6.0"
+    },
+    "scripts": {
+        "fix-cs": "nix-shell -p php82Packages.php-cs-fixer --run 'php-cs-fixer fix --rules=@PER-CS2.0 .'"
     }
 }

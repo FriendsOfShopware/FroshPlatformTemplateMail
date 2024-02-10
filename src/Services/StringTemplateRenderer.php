@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
@@ -12,6 +14,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 
+// @phpstan-ignore-next-line
 #[AsDecorator(\Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer::class)]
 class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer
 {
@@ -68,14 +71,18 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
         }
     }
 
-    #[CodeCoverageIgnore]
+    /**
+     * @codeCoverageIgnore
+     */
     public function enableTestMode(): void
     {
         $this->twig->addGlobal('testMode', true);
         $this->twig->disableStrictVariables();
     }
 
-    #[CodeCoverageIgnore]
+    /**
+     * @codeCoverageIgnore
+     */
     public function disableTestMode(): void
     {
         $this->twig->addGlobal('testMode', false);

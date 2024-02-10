@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
@@ -7,6 +9,7 @@ use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 #[When('prod')]
 #[AsDecorator(MailFinderService::class)]
@@ -15,8 +18,7 @@ class CachedMailFinderService implements MailFinderServiceInterface
     public function __construct(
         private readonly MailFinderServiceInterface $mailFinderService,
         private readonly CacheInterface $cache
-    ) {
-    }
+    ) {}
 
     public function findTemplateByTechnicalName(
         string $type,
@@ -26,7 +28,8 @@ class CachedMailFinderService implements MailFinderServiceInterface
     ): ?string {
         $salesChannelId = $businessEvent->getSalesChannelId();
 
-        $cacheKey = hash('xxh128',
+        $cacheKey = hash(
+            'xxh128',
             $type
             . $technicalName
             . $salesChannelId
@@ -34,7 +37,7 @@ class CachedMailFinderService implements MailFinderServiceInterface
             . $returnFolder
         );
 
-        return $this->cache->get($cacheKey, function (CacheItem $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder) {
+        return $this->cache->get($cacheKey, function (ItemInterface $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder) {
             $cacheItem->expiresAfter(3600);
 
             return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent, $returnFolder);

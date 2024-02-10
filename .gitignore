@@ -5,3 +5,4 @@
 /vendor
 src/Resources/views/
 src/Resources/public/
+/.php-cs-fixer.cache

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
@@ -20,11 +22,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MailTemplateSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @param EntityRepository<MailTemplateTypeCollection> $mailTemplateTypeRepository
+     */
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
         private readonly MailFinderServiceInterface $mailFinderService
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

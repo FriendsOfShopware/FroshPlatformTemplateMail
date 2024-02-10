@@ -1,0 +1,33 @@
+parameters:
+    phpVersion: 80100
+    level: max
+    treatPhpDocTypesAsCertain: false
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    checkUninitializedProperties: true
+    reportUnmatchedIgnoredErrors: true
+    paths:
+        - src
+        - tests
+    symfony:
+        constantHassers: false
+        containerXmlPath: '../../../var/cache/phpstan_dev/Shopware_Core_DevOps_StaticAnalyze_StaticAnalyzeKernelPhpstan_devDebugContainer.xml'
+        consoleApplicationLoader: ../../../src/Core/DevOps/StaticAnalyze/console-application.php
+
+    type_coverage:
+        return_type: 99
+        param_type: 90
+        property_type: 81
+
+    ignoreErrors:
+        - # Direct container access
+            message: '#Service ".*" is private#'
+            path: tests
+
+        - # Ignore deprecations
+            message: '#reason:class-hierarchy-change#'
+            path: tests
+
+        - # Ignore deprecations
+            message: '#reason:becomes-final#'
+            path: tests

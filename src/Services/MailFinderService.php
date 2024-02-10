@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
@@ -33,8 +35,7 @@ class MailFinderService implements MailFinderServiceInterface
         private readonly iterable $availableLoaders,
         private readonly SearchPathProvider $searchPathProvider,
         private readonly Connection $connection
-    ) {
-    }
+    ) {}
 
     public function findTemplateByTechnicalName(
         string $type,
@@ -58,7 +59,7 @@ class MailFinderService implements MailFinderServiceInterface
         $themePath = $stmt->executeQuery()->fetchOne();
 
         if (\is_string($themePath)) {
-            usort($paths, function ($a, $b) use ($themePath) {
+            usort($paths, static function ($a, $b) use ($themePath) {
                 if (str_contains($a, $themePath)) {
                     return -1;
                 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Services\MailLoader;
@@ -15,7 +16,7 @@ class CachedMailFinderServiceTest extends TestCase
     public function testCachingWorks(): void
     {
         $mailFinder = $this->createMock(MailFinderService::class);
-        $mailFinder->method('findTemplateByTechnicalName')->willReturnCallback(fn () => (string) microtime(true));
+        $mailFinder->method('findTemplateByTechnicalName')->willReturnCallback(fn() => (string) microtime(true));
 
         $cachedMailFinder = new CachedMailFinderService($mailFinder, new ArrayAdapter());
         $context = new TemplateMailContext('1234', Context::createDefaultContext());

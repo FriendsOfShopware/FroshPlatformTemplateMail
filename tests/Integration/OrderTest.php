@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Integration;
@@ -33,12 +34,9 @@ class OrderTest extends TestCase
     use CountryAddToSalesChannelTestBehaviour;
     use SetupExampleTemplatesTrait;
 
-    /**
-     * @var SalesChannelContext
-     */
-    private $salesChannelContext;
+    private SalesChannelContext $salesChannelContext;
 
-    private ?object $orderService = null;
+    private OrderService $orderService;
 
     protected function setUp(): void
     {
@@ -142,6 +140,9 @@ class OrderTest extends TestCase
         return $this->orderService->createOrder($data, $this->salesChannelContext);
     }
 
+    /**
+     * @param array<mixed> $options
+     */
     private function createCustomer(string $firstName, string $lastName, array $options = []): string
     {
         $customerId = Uuid::randomHex();

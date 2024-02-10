@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
@@ -15,8 +17,7 @@ class TemplateMailContext
     public function __construct(
         private readonly string $salesChannelId,
         private readonly Context $context
-    ) {
-    }
+    ) {}
 
     public function getSalesChannelId(): string
     {

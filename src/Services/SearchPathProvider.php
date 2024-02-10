@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
@@ -7,14 +9,19 @@ use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\System\Language\LanguageCollection;
 use Shopware\Core\System\Language\LanguageEntity;
 
 class SearchPathProvider
 {
-    public function __construct(private readonly EntityRepository $languageRepository)
-    {
-    }
+    /**
+     * @param EntityRepository<LanguageCollection> $languageRepository
+     */
+    public function __construct(private readonly EntityRepository $languageRepository) {}
 
+    /**
+     * @return array<string>
+     */
     public function buildPaths(TemplateMailContext $businessEvent): array
     {
         $searchFolder = [$businessEvent->getContext()->getLanguageId(), 'global'];

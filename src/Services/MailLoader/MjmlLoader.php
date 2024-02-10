@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services\MailLoader;
 
@@ -18,8 +20,7 @@ class MjmlLoader implements LoaderInterface
         private readonly string $mjmlServer,
         private readonly LoggerInterface $logger,
         private readonly Client $client = new Client()
-    ) {
-    }
+    ) {}
 
     /**
      * @throws GuzzleException
@@ -65,6 +66,9 @@ class MjmlLoader implements LoaderInterface
         return $compileTemplate['html'];
     }
 
+    /**
+     * @return string[]
+     */
     public function supportedExtensions(): array
     {
         return ['mjml'];

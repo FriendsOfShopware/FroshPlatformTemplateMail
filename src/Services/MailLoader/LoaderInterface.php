@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services\MailLoader;
 
@@ -6,5 +8,8 @@ interface LoaderInterface
 {
     public function load(string $path): ?string;
 
+    /**
+     * @return string[]
+     */
     public function supportedExtensions(): array;
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
@@ -6,6 +8,7 @@ use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
+use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
@@ -14,6 +17,7 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
+use Shopware\Core\System\Language\LanguageCollection;
 use Shopware\Core\System\Language\LanguageEntity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,14 +25,17 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class FlowSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @param EntityRepository<MailTemplateTypeCollection> $mailTemplateTypeRepository
+     * @param EntityRepository<LanguageCollection> $languageRepository
+     */
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
         private readonly MailFinderServiceInterface $mailFinderService,
         #[Autowire(service: Translator::class)]
         private readonly AbstractTranslator $translator,
         private readonly EntityRepository $languageRepository,
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -47,7 +54,7 @@ class FlowSubscriber implements EventSubscriberInterface
         $this->sendMail($event->getDataBag(), $mailTemplateTypeId, $event->getContext());
     }
 
-    public function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context): void
+    private function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context): void
     {
         /** @var MailTemplateTypeEntity $mailTemplateType */
         $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context)->first();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Services\MailLoader;
@@ -43,7 +44,7 @@ class MjmlLoaderTest extends TestCase
     public function testApiRespondsErrors(): void
     {
         $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], json_encode(['errors' => ['some error happend']])),
+            new Response(200, ['Content-Type' => 'application/json'], json_encode(['errors' => ['some error happend']], JSON_THROW_ON_ERROR)),
         ]);
 
         $handlerStack = HandlerStack::create($mock);

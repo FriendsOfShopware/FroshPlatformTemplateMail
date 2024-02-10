@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Tests\Services;
@@ -11,6 +12,7 @@ use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Api\Context\SystemSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
+use Shopware\Core\System\Language\LanguageCollection;
 use Shopware\Core\System\Language\LanguageEntity;
 use Shopware\Core\System\Locale\LocaleEntity;
 use Shopware\Core\Test\TestDefaults;
@@ -19,6 +21,7 @@ use Shopware\Core\Test\Stub\DataAbstractionLayer\StaticEntityRepository;
 class SearchPathProviderTest extends TestCase
 {
     /**
+     * @param array<string> $expectedPaths
      * @dataProvider eventProvider
      */
     public function testPaths(TemplateMailContext $event, array $expectedPaths): void
@@ -28,13 +31,14 @@ class SearchPathProviderTest extends TestCase
         $locale = new LocaleEntity();
         $locale->setCode('en-GB');
         $language->setLocale($locale);
-        $repository = new StaticEntityRepository([new EntityCollection([$language])]);
+        $repository = new StaticEntityRepository([new LanguageCollection([$language])]);
 
+        // @phpstan-ignore-next-line
         $provider = new SearchPathProvider($repository);
         static::assertSame($expectedPaths, $provider->buildPaths($event));
     }
 
-    public static function eventProvider(): iterable
+    public static function eventProvider(): \Generator
     {
         // Without sales channel source
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services\MailLoader;
 
@@ -12,6 +14,9 @@ class TwigLoader implements LoaderInterface
         return file_get_contents($path) ?: null;
     }
 
+    /**
+     * @return string[]
+     */
     public function supportedExtensions(): array
     {
         return ['twig'];
