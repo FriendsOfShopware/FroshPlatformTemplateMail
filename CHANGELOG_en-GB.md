@@ -1,0 +1,12 @@
+# 3.0.1
+- [chore: increase version](/c73a8bb)
+- [ci: add js linting](/91c470e)
+- [fix: unused imports](/0a9047f)
+- [feat: add phpstan](/c942ee7)
+- [fix: admin creating new mail template, fixes #57](/759ab95)
+- [fix: improve injecting the language into mailer, fixes #43](/0a1379f)
+- [ci: update workflows](/282f1b6)
+- [ci: delete backporting](/0cf541d)
+- [fix: restore 6.5 compatiblity](/76ff889)
+- [Add configurable MJML server (#55)](/cb608fc)
+- [ci: add backporting](/269fd74)
