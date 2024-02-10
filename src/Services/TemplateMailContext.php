@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\Event\EventData\EventDataCollection;
-use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
 
 /**
  * @codeCoverageIgnore

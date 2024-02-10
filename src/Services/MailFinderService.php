@@ -5,14 +5,8 @@ declare(strict_types=1);
 namespace Frosh\TemplateMail\Services;
 
 use Doctrine\DBAL\Connection;
-use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
-use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
-use Shopware\Core\Framework\Adapter\Translation\Translator;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
-use Shopware\Core\System\Language\LanguageEntity;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;

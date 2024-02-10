@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Framework\Api\Context\SalesChannelApiSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use Frosh\TemplateMail\Services\TemplateMailContext;
-use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Contracts\Cache\CacheInterface;
