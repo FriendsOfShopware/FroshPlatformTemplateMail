@@ -31,9 +31,6 @@ class MailFinderService implements MailFinderServiceInterface
         private readonly FilesystemLoader $filesystemLoader,
         #[TaggedIterator('frosh_template_mail.loader')]
         private readonly iterable $availableLoaders,
-        private readonly EntityRepository $languageRepository,
-        #[Autowire(service: Translator::class)]
-        private readonly AbstractTranslator $translator,
         private readonly SearchPathProvider $searchPathProvider,
         private readonly Connection $connection
     ) {
@@ -82,8 +79,6 @@ class MailFinderService implements MailFinderServiceInterface
                     foreach ($searchFolder as $folder) {
                         $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
                         if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
-                            $this->fixTranslator($businessEvent);
-
                             return $returnFolder ? $filePath : $content;
                         }
                     }
@@ -92,26 +87,5 @@ class MailFinderService implements MailFinderServiceInterface
         }
 
         return null;
-    }
-
-    private function fixTranslator(TemplateMailContext $businessEvent): void
-    {
-        $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
-        $criteria->addAssociation('locale');
-
-        /** @var LanguageEntity $language */
-        $language = $this->languageRepository->search($criteria, $businessEvent->getContext())->first();
-
-        $localCode = $language->getLocale()?->getCode();
-        if ($localCode === null) {
-            return;
-        }
-
-        $this->translator->injectSettings(
-            $businessEvent->getSalesChannelId(),
-            $businessEvent->getContext()->getLanguageId(),
-            $localCode,
-            $businessEvent->getContext()
-        );
     }
 }

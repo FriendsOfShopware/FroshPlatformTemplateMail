@@ -8,10 +8,14 @@ use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
+use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
+use Shopware\Core\System\Language\LanguageEntity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -19,7 +23,10 @@ class FlowSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
-        private readonly MailFinderServiceInterface $mailFinderService
+        private readonly MailFinderServiceInterface $mailFinderService,
+        #[Autowire(service: Translator::class)]
+        private readonly AbstractTranslator $translator,
+        private readonly EntityRepository $languageRepository,
     ) {
     }
 
@@ -48,6 +55,8 @@ class FlowSubscriber implements EventSubscriberInterface
         $technicalName = $mailTemplateType->getTechnicalName();
         $event = $this->createTemplateMailContext($dataBag, $context);
 
+        $this->fixTranslator($event);
+
         $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $event);
         $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $event);
         $subject = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_SUBJECT, $technicalName, $event);
@@ -72,6 +81,27 @@ class FlowSubscriber implements EventSubscriberInterface
         return new TemplateMailContext(
             \is_string($salesChannelId) ? $salesChannelId : Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
             $context
+        );
+    }
+
+    private function fixTranslator(TemplateMailContext $businessEvent): void
+    {
+        $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
+        $criteria->addAssociation('locale');
+
+        /** @var LanguageEntity $language */
+        $language = $this->languageRepository->search($criteria, $businessEvent->getContext())->first();
+
+        $localCode = $language->getLocale()?->getCode();
+        if ($localCode === null) {
+            return;
+        }
+
+        $this->translator->injectSettings(
+            $businessEvent->getSalesChannelId(),
+            $businessEvent->getContext()->getLanguageId(),
+            $localCode,
+            $businessEvent->getContext()
         );
     }
 }
