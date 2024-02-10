@@ -1,6 +1,7 @@
 {% block sw_mail_template_options_form_subject_field %}
     {% parent %}
     <sw-label
+        v-if="mailTemplate.extensions.froshTemplateMail"
         appearance="circle"
         :variant="mailTemplate.extensions.froshTemplateMail.subject ? 'success' : 'warning'"
         v-tooltip="getFroshTooltip('subject', mailTemplate.extensions.froshTemplateMail.subject)"
@@ -12,6 +13,7 @@
 {% block sw_mail_template_mail_text_form_content_plain_field %}
     {% parent %}
     <sw-label
+        v-if="mailTemplate.extensions.froshTemplateMail"
         appearance="circle"
         :variant="mailTemplate.extensions.froshTemplateMail.plain ? 'success' : 'warning'"
         v-tooltip="getFroshTooltip('plain', mailTemplate.extensions.froshTemplateMail.plain)"
@@ -23,6 +25,7 @@
 {% block sw_mail_template_mail_text_form_content_html_field %}
     {% parent %}
     <sw-label
+        v-if="mailTemplate.extensions.froshTemplateMail"
         appearance="circle"
         :variant="mailTemplate.extensions.froshTemplateMail.html ? 'success' : 'warning'"
         v-tooltip="getFroshTooltip('html', mailTemplate.extensions.froshTemplateMail.html)"
