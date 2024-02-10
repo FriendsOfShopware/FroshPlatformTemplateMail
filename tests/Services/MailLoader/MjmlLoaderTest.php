@@ -18,7 +18,7 @@ class MjmlLoaderTest extends TestCase
 {
     public function testLoadingWorks(): void
     {
-        $loader = new MjmlLoader(new NullLogger());
+        $loader = new MjmlLoader('https://mjml.shyim.de', new NullLogger());
         static::assertSame(['mjml'], $loader->supportedExtensions());
 
         $text = $loader->load(__DIR__ . '/_fixtures/test.mjml');
@@ -35,7 +35,7 @@ class MjmlLoaderTest extends TestCase
         $handlerStack = HandlerStack::create($mock);
         $client = new Client(['handler' => $handlerStack]);
 
-        $loader = new MjmlLoader(new NullLogger(), $client);
+        $loader = new MjmlLoader('https://mjml.shyim.de', new NullLogger(), $client);
 
         static::assertSame('', $loader->load(__DIR__ . '/_fixtures/test.mjml'));
     }
@@ -49,7 +49,7 @@ class MjmlLoaderTest extends TestCase
         $handlerStack = HandlerStack::create($mock);
         $client = new Client(['handler' => $handlerStack]);
 
-        $loader = new MjmlLoader(new NullLogger(), $client);
+        $loader = new MjmlLoader('https://mjml.shyim.de', new NullLogger(), $client);
 
         static::expectException(MjmlCompileError::class);
         $loader->load(__DIR__ . '/_fixtures/test.mjml');
