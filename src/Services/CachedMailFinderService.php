@@ -10,11 +10,11 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 #[When('prod')]
 #[AsDecorator(MailFinderService::class)]
-readonly class CachedMailFinderService implements MailFinderServiceInterface
+class CachedMailFinderService implements MailFinderServiceInterface
 {
     public function __construct(
-        private MailFinderServiceInterface $mailFinderService,
-        private CacheInterface $cache
+        private readonly MailFinderServiceInterface $mailFinderService,
+        private readonly CacheInterface $cache
     ) {
     }
 

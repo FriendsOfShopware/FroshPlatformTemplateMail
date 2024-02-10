@@ -10,11 +10,11 @@ use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
 /**
  * @codeCoverageIgnore
  */
-readonly class TemplateMailContext
+class TemplateMailContext
 {
     public function __construct(
-        private string $salesChannelId,
-        private Context $context
+        private readonly string $salesChannelId,
+        private readonly Context $context
     ) {
     }
 

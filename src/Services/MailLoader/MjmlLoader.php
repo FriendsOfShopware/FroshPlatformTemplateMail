@@ -7,12 +7,14 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class MjmlLoader implements LoaderInterface
 {
     private const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
 
     public function __construct(
+        #[Autowire('%frosh_platform_template_mail.mjml_server%')]
         private readonly string $mjmlServer,
         private readonly LoggerInterface $logger,
         private readonly Client $client = new Client()
