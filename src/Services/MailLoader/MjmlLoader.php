@@ -13,6 +13,7 @@ class MjmlLoader implements LoaderInterface
     private const MJML_INCLUDE = '/<mj-include.*?path=[\'|\"]([^"|\']*)[^>]*\/>/im';
 
     public function __construct(
+        private readonly string $mjmlServer,
         private readonly LoggerInterface $logger,
         private readonly Client $client = new Client()
     ) {
@@ -32,7 +33,7 @@ class MjmlLoader implements LoaderInterface
         $mjmlTemplate = $this->parseIncludes($fileContent, \dirname($path));
 
         try {
-            $response = $this->client->post('https://mjml.shyim.de', [
+            $response = $this->client->post($this->mjmlServer, [
                 'json' => [
                     'mjml' => $mjmlTemplate,
                 ],
