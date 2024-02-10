@@ -6,16 +6,19 @@ Shopware.Component.override('sw-mail-template-list', {
         getListColumns() {
             const columns = this.$super('getListColumns');
 
-            columns.unshift({
-                property: 'froshTemplateMail',
-                label: 'sw-mail-template.list.columnTemplateMail',
-                allowResize: true,
-            }, {
-                property: 'technicalName',
-                label: 'sw-mail-template.list.columnTechnicalName',
-                allowResize: true,
-                visible: false,
-            });
+            columns.unshift(
+                {
+                    property: 'froshTemplateMail',
+                    label: 'sw-mail-template.list.columnTemplateMail',
+                    allowResize: true,
+                },
+                {
+                    property: 'technicalName',
+                    label: 'sw-mail-template.list.columnTechnicalName',
+                    allowResize: true,
+                    visible: false,
+                },
+            );
 
             return columns;
         },

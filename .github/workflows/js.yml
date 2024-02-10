@@ -1,0 +1,27 @@
+name: JavaScript
+on:
+    push:
+        paths:
+            - '**/*.js'
+            - '**/*.ts'
+        branches:
+            - main
+    pull_request:
+        paths:
+            - '**/*.js'
+            - '**/*.ts'
+
+jobs:
+    run:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            -   name: Setup Biome CLI
+                uses: biomejs/setup-biome@v2
+                with:
+                    version: latest
+
+            -   name: Run Biome
+                run: biome ci .
