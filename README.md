@@ -24,10 +24,10 @@ This plugin allows to store the mails in theme instead of database. This gives u
 
 ### Export Templates
 
-You can use the following command to export the current templates to the file system to start modifying them:
+You can use the following command to export the current templates to the file system of your theme `MyTheme` to start modifying them:
 
 ```shell
-bin/console frosh:template-mail:export
+bin/console frosh:template-mail:export custom/plugins/MyTheme/src/Resources/views/email/
 ```
 
 ## Template location
