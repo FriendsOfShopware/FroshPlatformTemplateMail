@@ -9,31 +9,31 @@ use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Content\MailTemplate\Event\MailSendSubscriberBridgeEvent;
 use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\Event\BusinessEvent;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
+use Shopware\Core\System\Language\LanguageEntity;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class FlowSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EntityRepository
-     */
-    private $mailTemplateTypeRepository;
-
-    /**
-     * @var MailFinderServiceInterface
-     */
-    private $mailFinderService;
+    private EntityRepository $mailTemplateTypeRepository;
+    private MailFinderServiceInterface $mailFinderService;
+    private EntityRepository $languageRepository;
+    private AbstractTranslator $translator;
 
     public function __construct(
         EntityRepository $mailTemplateTypeRepository,
-        MailFinderServiceInterface $mailFinderService
+        MailFinderServiceInterface $mailFinderService,
+        EntityRepository $languageRepository,
+        AbstractTranslator $translator
     )
     {
+        $this->translator = $translator;
+        $this->languageRepository = $languageRepository;
         $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
         $this->mailFinderService = $mailFinderService;
     }
@@ -65,13 +65,15 @@ class FlowSubscriber implements EventSubscriberInterface
         $this->sendMail($event->getDataBag(), $event->getMailTemplate()->getMailTemplateTypeId(), $event->getContext());
     }
 
-    public function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context)
+    public function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context): void
     {
         /** @var MailTemplateTypeEntity $mailTemplateType */
         $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context) ->first();
 
         $technicalName = $mailTemplateType->getTechnicalName();
         $event = $this->createBusinessEventFromBag($dataBag, $context);
+
+        $this->fixTranslator($event);
 
         $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $event);
         $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $event);
@@ -90,8 +92,29 @@ class FlowSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): BusinessEvent
+    private function createBusinessEventFromBag(ParameterBag $dataBag, Context $context): TemplateMailBusinessEvent
     {
         return new TemplateMailBusinessEvent($dataBag->get('salesChannelId') ?? Defaults::SALES_CHANNEL, $context);
+    }
+
+    private function fixTranslator(TemplateMailBusinessEvent $businessEvent): void
+    {
+        $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
+        $criteria->addAssociation('locale');
+
+        /** @var LanguageEntity $language */
+        $language = $this->languageRepository->search($criteria, $businessEvent->getContext())->first();
+
+        $locale = $language->getLocale();
+        if ($locale === null) {
+            return;
+        }
+
+        $this->translator->injectSettings(
+            $businessEvent->getSalesChannelId(),
+            $businessEvent->getContext()->getLanguageId(),
+            $locale->getCode(),
+            $businessEvent->getContext()
+        );
     }
 }
