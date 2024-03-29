@@ -2,7 +2,7 @@ name: PHPUnit
 on:
     push:
         branches:
-            - 'master'
+            - 'v1'
         tags-ignore:
             - '*'
     pull_request:
@@ -13,7 +13,7 @@ env:
 jobs:
     phpunit:
         name: Run tests
-        container: ghcr.io/friendsofshopware/platform-plugin-dev:6.4
+        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.4.17
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
