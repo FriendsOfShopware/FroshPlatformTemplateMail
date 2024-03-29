@@ -2,7 +2,7 @@ name: PHPUnit
 on:
     push:
         branches:
-            - 'v1'
+            - '1.x'
         tags-ignore:
             - '*'
     pull_request:
