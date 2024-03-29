@@ -1,3 +1,7 @@
+# 1.1.1
+
+* Removed unexpected character in services.xml
+
 # 1.1.0
 
 * Improved injecting the language into mailer
