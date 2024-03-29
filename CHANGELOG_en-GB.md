@@ -1,3 +1,7 @@
+# 1.1.0
+
+* Improved injecting the language into mailer
+
 # 1.0.0
 
 * Removed subscriber generator and use shopware core event
