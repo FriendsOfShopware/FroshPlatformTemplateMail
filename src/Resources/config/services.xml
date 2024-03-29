@@ -36,7 +36,7 @@
             <argument type="service" id="mail_template_type.repository"/>
             <argument type="service" id="Frosh\TemplateMail\Services\MailFinderService"/>
             <argument type="service" id="language.repository"/>
-+           <argument type="service" id="Shopware\Core\Framework\Adapter\Translation\Translator"/>
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Translation\Translator"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
