@@ -10,6 +10,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Twig\Loader\FilesystemLoader;
 
 #[AsAlias]
@@ -21,6 +22,7 @@ class MailFinderService implements MailFinderServiceInterface
 
     /**
      * @param LoaderInterface[] $availableLoaders
+     * @param iterable<BundleInterface> $bundles
      */
     public function __construct(
         #[Autowire(service: 'twig.loader.native_filesystem')]
@@ -28,7 +30,9 @@ class MailFinderService implements MailFinderServiceInterface
         #[TaggedIterator('frosh_template_mail.loader')]
         private readonly iterable $availableLoaders,
         private readonly SearchPathProvider $searchPathProvider,
-        private readonly Connection $connection
+        private readonly Connection $connection,
+        #[Autowire(service: 'kernel.bundles')]
+        private readonly iterable $bundles,
     ) {}
 
     public function findTemplateByTechnicalName(
@@ -41,16 +45,8 @@ class MailFinderService implements MailFinderServiceInterface
 
         $searchFolder = $this->searchPathProvider->buildPaths($businessEvent);
 
-        $stmt = $this->connection->prepare(
-            'SELECT IFNULL(a.path, p.path) AS `path` FROM `theme` AS t '
-                    . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
-                    . 'LEFT JOIN `plugin` AS p ON p.`name` = t.`technical_name` '
-                    . 'LEFT JOIN `app` AS a ON a.`name` = t.`technical_name` '
-                    . 'WHERE tsc.`sales_channel_id` = ?;'
-        );
-
-        $stmt->bindValue(1, Uuid::fromHexToBytes($businessEvent->getSalesChannelId()));
-        $themePath = $stmt->executeQuery()->fetchOne();
+        $themePath = $this->findPathOfThemeFromPluginOrApp($businessEvent->getSalesChannelId())
+            ?? $this->findPathOfThemeFromSymfonyBundle($businessEvent->getSalesChannelId());
 
         if (\is_string($themePath)) {
             usort($paths, static function ($a, $b) use ($themePath) {
@@ -79,6 +75,38 @@ class MailFinderService implements MailFinderServiceInterface
                     }
                 }
             }
+        }
+
+        return null;
+    }
+
+    public function findPathOfThemeFromPluginOrApp(string $salesChannelId): ?string {
+        $stmt = $this->connection->prepare(
+            'SELECT IFNULL(a.path, p.path) AS `path` FROM `theme` AS t '
+            . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
+            . 'LEFT JOIN `plugin` AS p ON p.`name` = t.`technical_name` '
+            . 'LEFT JOIN `app` AS a ON a.`name` = t.`technical_name` '
+            . 'WHERE tsc.`sales_channel_id` = ?;'
+        );
+
+        $stmt->bindValue(1, Uuid::fromHexToBytes($salesChannelId));
+
+        return $stmt->executeQuery()->fetchOne();
+    }
+
+    public function findPathOfThemeFromSymfonyBundle(string $salesChannelId): ?string {
+        $stmt = $this->connection->prepare(
+            'SELECT t.`technical_name` FROM `theme` AS t '
+            . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
+            . 'WHERE tsc.`sales_channel_id` = ?;'
+        );
+
+        $stmt->bindValue(1, Uuid::fromHexToBytes($salesChannelId));
+
+        $technicalName = $stmt->executeQuery()->fetchOne();
+
+        if (isset($this->bundles[$technicalName])) {
+            return $this->bundles[$technicalName]->getPath();
         }
 
         return null;
