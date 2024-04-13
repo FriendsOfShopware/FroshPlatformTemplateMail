@@ -13,7 +13,7 @@ class TemplateMailContext
 {
     public function __construct(
         private readonly string $salesChannelId,
-        private readonly Context $context
+        private readonly Context $context,
     ) {}
 
     public function getSalesChannelId(): string

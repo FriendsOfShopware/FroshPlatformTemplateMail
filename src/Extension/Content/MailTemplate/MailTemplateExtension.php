@@ -17,7 +17,7 @@ class MailTemplateExtension extends EntityExtension
     public function extendFields(FieldCollection $collection): void
     {
         $collection->add(
-            (new StringField('frosh_template_mail', 'froshTemplateMail'))->addFlags(new Runtime())
+            (new StringField('frosh_template_mail', 'froshTemplateMail'))->addFlags(new Runtime()),
         );
     }
 

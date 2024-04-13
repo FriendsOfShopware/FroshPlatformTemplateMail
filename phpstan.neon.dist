@@ -23,11 +23,3 @@ parameters:
         - # Direct container access
             message: '#Service ".*" is private#'
             path: tests
-
-        - # Ignore deprecations
-            message: '#reason:class-hierarchy-change#'
-            path: tests
-
-        - # Ignore deprecations
-            message: '#reason:becomes-final#'
-            path: tests

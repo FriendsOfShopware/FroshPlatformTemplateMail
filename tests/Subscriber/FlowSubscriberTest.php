@@ -33,7 +33,7 @@ class FlowSubscriberTest extends TestCase
             $mailTemplateTypeRepository,
             $this->createMock(MailFinderServiceInterface::class),
             $this->createMock(AbstractTranslator::class),
-            $this->createMock(EntityRepository::class)
+            $this->createMock(EntityRepository::class),
         );
 
         $subscriber->onFlowSendMailActionEvent(new FlowSendMailActionEvent(new DataBag([]), new MailTemplateEntity(), new StorableFlow('test', Context::createDefaultContext())));

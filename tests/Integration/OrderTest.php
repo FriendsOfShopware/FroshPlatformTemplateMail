@@ -50,7 +50,7 @@ class OrderTest extends TestCase
         $this->salesChannelContext = $contextFactory->create(
             '',
             TestDefaults::SALES_CHANNEL,
-            [SalesChannelContextService::CUSTOMER_ID => $this->createCustomer('Jon', 'Doe')]
+            [SalesChannelContextService::CUSTOMER_ID => $this->createCustomer('Jon', 'Doe')],
         );
     }
 
@@ -72,7 +72,7 @@ class OrderTest extends TestCase
                 'text/html' => 'HTML CONFIRM',
                 'text/plain' => 'TEXT CONFIRM',
             ],
-            $mailSentEvent->getContents()
+            $mailSentEvent->getContents(),
         );
         static::assertSame('SUBJECT CONFIRM', $mailSentEvent->getSubject());
     }
@@ -125,9 +125,9 @@ class OrderTest extends TestCase
                     13.37,
                     13.37,
                     new CalculatedTaxCollection(),
-                    new TaxRuleCollection()
+                    new TaxRuleCollection(),
                 ),
-                $this->getValidPaymentMethodId()
+                $this->getValidPaymentMethodId(),
             ),
         ]);
     }

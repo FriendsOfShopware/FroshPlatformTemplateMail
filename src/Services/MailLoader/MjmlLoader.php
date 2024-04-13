@@ -19,7 +19,7 @@ class MjmlLoader implements LoaderInterface
         #[Autowire('%frosh_platform_template_mail.mjml_server%')]
         private readonly string $mjmlServer,
         private readonly LoggerInterface $logger,
-        private readonly Client $client = new Client()
+        private readonly Client $client = new Client(),
     ) {}
 
     /**

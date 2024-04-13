@@ -27,7 +27,7 @@ class MailTemplateSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
-        private readonly MailFinderServiceInterface $mailFinderService
+        private readonly MailFinderServiceInterface $mailFinderService,
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -76,7 +76,7 @@ class MailTemplateSubscriber implements EventSubscriberInterface
                     'plain' => $plain,
                     'subject' => $subject,
                     'technicalName' => $technicalName,
-                ])
+                ]),
             );
         }
     }

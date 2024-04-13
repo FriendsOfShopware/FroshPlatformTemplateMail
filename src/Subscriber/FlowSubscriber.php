@@ -87,7 +87,7 @@ class FlowSubscriber implements EventSubscriberInterface
 
         return new TemplateMailContext(
             \is_string($salesChannelId) ? $salesChannelId : Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
-            $context
+            $context,
         );
     }
 
@@ -108,7 +108,7 @@ class FlowSubscriber implements EventSubscriberInterface
             $businessEvent->getSalesChannelId(),
             $businessEvent->getContext()->getLanguageId(),
             $localCode,
-            $businessEvent->getContext()
+            $businessEvent->getContext(),
         );
     }
 }

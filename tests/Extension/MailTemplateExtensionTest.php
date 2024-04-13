@@ -32,7 +32,7 @@ class MailTemplateExtensionTest extends TestCase
     {
         static::assertSame(
             MailTemplateDefinition::class,
-            (new MailTemplateExtension())->getDefinitionClass()
+            (new MailTemplateExtension())->getDefinitionClass(),
         );
     }
 }

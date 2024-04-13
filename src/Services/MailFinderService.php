@@ -39,7 +39,7 @@ class MailFinderService implements MailFinderServiceInterface
         string $type,
         string $technicalName,
         TemplateMailContext $businessEvent,
-        bool $returnFolder = false
+        bool $returnFolder = false,
     ): ?string {
         $paths = $this->filesystemLoader->getPaths();
 
@@ -80,25 +80,34 @@ class MailFinderService implements MailFinderServiceInterface
         return null;
     }
 
-    public function findPathOfThemeFromPluginOrApp(string $salesChannelId): ?string {
+    public function findPathOfThemeFromPluginOrApp(string $salesChannelId): ?string
+    {
         $stmt = $this->connection->prepare(
             'SELECT IFNULL(a.path, p.path) AS `path` FROM `theme` AS t '
             . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
             . 'LEFT JOIN `plugin` AS p ON p.`name` = t.`technical_name` '
             . 'LEFT JOIN `app` AS a ON a.`name` = t.`technical_name` '
-            . 'WHERE tsc.`sales_channel_id` = ?;'
+            . 'WHERE tsc.`sales_channel_id` = ?;',
         );
 
         $stmt->bindValue(1, Uuid::fromHexToBytes($salesChannelId));
 
-        return $stmt->executeQuery()->fetchOne();
+        /** @var string|false $path */
+        $path = $stmt->executeQuery()->fetchOne();
+
+        if ($path === false) {
+            return null;
+        }
+
+        return $path;
     }
 
-    public function findPathOfThemeFromSymfonyBundle(string $salesChannelId): ?string {
+    public function findPathOfThemeFromSymfonyBundle(string $salesChannelId): ?string
+    {
         $stmt = $this->connection->prepare(
             'SELECT t.`technical_name` FROM `theme` AS t '
             . 'LEFT JOIN `theme_sales_channel` AS tsc ON tsc.`theme_id` = t.`id` '
-            . 'WHERE tsc.`sales_channel_id` = ?;'
+            . 'WHERE tsc.`sales_channel_id` = ?;',
         );
 
         $stmt->bindValue(1, Uuid::fromHexToBytes($salesChannelId));

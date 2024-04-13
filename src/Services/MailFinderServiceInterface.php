@@ -10,6 +10,6 @@ interface MailFinderServiceInterface
         string $type,
         string $technicalName,
         TemplateMailContext $businessEvent,
-        bool $returnFolder = false
+        bool $returnFolder = false,
     ): ?string;
 }

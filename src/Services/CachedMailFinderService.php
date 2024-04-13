@@ -15,14 +15,14 @@ class CachedMailFinderService implements MailFinderServiceInterface
 {
     public function __construct(
         private readonly MailFinderServiceInterface $mailFinderService,
-        private readonly CacheInterface $cache
+        private readonly CacheInterface $cache,
     ) {}
 
     public function findTemplateByTechnicalName(
         string $type,
         string $technicalName,
         TemplateMailContext $businessEvent,
-        bool $returnFolder = false
+        bool $returnFolder = false,
     ): ?string {
         $salesChannelId = $businessEvent->getSalesChannelId();
 
@@ -32,7 +32,7 @@ class CachedMailFinderService implements MailFinderServiceInterface
             . $technicalName
             . $salesChannelId
             . $businessEvent->getContext()->getLanguageId()
-            . $returnFolder
+            . $returnFolder,
         );
 
         return $this->cache->get($cacheKey, function (ItemInterface $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder) {
