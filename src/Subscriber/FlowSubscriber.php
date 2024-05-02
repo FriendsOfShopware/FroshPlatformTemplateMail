@@ -87,13 +87,15 @@ class FlowSubscriber implements EventSubscriberInterface
 
         return new TemplateMailContext(
             \is_string($salesChannelId) ? $salesChannelId : Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
-            $context
+            $context,
+            $dataBag->get('languageId')
         );
     }
 
     private function fixTranslator(TemplateMailContext $businessEvent): void
     {
-        $criteria = new Criteria([$businessEvent->getContext()->getLanguageId()]);
+        $languageId = $businessEvent->getLanguageId() ?? $businessEvent->getContext()->getLanguageId();
+        $criteria = new Criteria([$languageId]);
         $criteria->addAssociation('locale');
 
         /** @var LanguageEntity $language */
@@ -106,7 +108,7 @@ class FlowSubscriber implements EventSubscriberInterface
 
         $this->translator->injectSettings(
             $businessEvent->getSalesChannelId(),
-            $businessEvent->getContext()->getLanguageId(),
+            $languageId,
             $localCode,
             $businessEvent->getContext()
         );
