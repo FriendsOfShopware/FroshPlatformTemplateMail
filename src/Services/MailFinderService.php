@@ -22,7 +22,7 @@ class MailFinderService implements MailFinderServiceInterface
 
     /**
      * @param LoaderInterface[] $availableLoaders
-     * @param iterable<BundleInterface> $bundles
+     * @param array<BundleInterface> $bundles
      */
     public function __construct(
         #[Autowire(service: 'twig.loader.native_filesystem')]
@@ -32,7 +32,7 @@ class MailFinderService implements MailFinderServiceInterface
         private readonly SearchPathProvider $searchPathProvider,
         private readonly Connection $connection,
         #[Autowire(service: 'kernel.bundles')]
-        private readonly iterable $bundles,
+        private readonly array $bundles,
     ) {}
 
     public function findTemplateByTechnicalName(
