@@ -112,6 +112,7 @@ class MailFinderService implements MailFinderServiceInterface
 
         $stmt->bindValue(1, Uuid::fromHexToBytes($salesChannelId));
 
+        /** @var string $technicalName */
         $technicalName = $stmt->executeQuery()->fetchOne();
 
         if (isset($this->bundles[$technicalName])) {
