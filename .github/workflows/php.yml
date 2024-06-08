@@ -21,14 +21,14 @@ jobs:
     uses: shopware/github-actions/.github/workflows/phpstan.yml@main
     with:
       extensionName: ${{ github.event.repository.name }}
-      shopwareVersion: 6.5.x
+      shopwareVersion: trunk
   phpunit:
     strategy:
       fail-fast: false
       matrix:
         shopware-version:
           - '6.5.x'
-          - 'v6.6.0.0-rc2'
+          - 'trunk'
     uses: shopware/github-actions/.github/workflows/phpunit.yml@main
     with:
       extensionName: ${{ github.event.repository.name }}

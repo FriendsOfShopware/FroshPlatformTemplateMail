@@ -19,6 +19,9 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\System\Language\LanguageCollection;
 use Shopware\Core\System\Language\LanguageEntity;
+use Shopware\Core\System\SalesChannel\SalesChannelCollection;
+use Shopware\Core\System\SalesChannel\SalesChannelEntity;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -28,6 +31,7 @@ class FlowSubscriber implements EventSubscriberInterface
     /**
      * @param EntityRepository<MailTemplateTypeCollection> $mailTemplateTypeRepository
      * @param EntityRepository<LanguageCollection> $languageRepository
+     * @param EntityRepository<SalesChannelCollection> $salesChannelRepository
      */
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
@@ -35,6 +39,8 @@ class FlowSubscriber implements EventSubscriberInterface
         #[Autowire(service: Translator::class)]
         private readonly AbstractTranslator $translator,
         private readonly EntityRepository $languageRepository,
+        private readonly SystemConfigService $systemConfigService,
+        private readonly EntityRepository $salesChannelRepository,
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -77,6 +83,17 @@ class FlowSubscriber implements EventSubscriberInterface
         }
 
         if ($subject) {
+            $salesChannelId = $dataBag->getString('salesChannelId');
+            $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
+            if ($debugMode) {
+                $subject = sprintf(
+                    'DEBUG: %s (%s - %s - %s)',
+                    $subject,
+                    $this->getSalesChannelName($salesChannelId, $context),
+                    $this->getLocaleCode($context->getLanguageId(), $context),
+                    $technicalName,
+                );
+            }
             $dataBag->set('subject', $subject);
         }
     }
@@ -88,20 +105,19 @@ class FlowSubscriber implements EventSubscriberInterface
         return new TemplateMailContext(
             \is_string($salesChannelId) ? $salesChannelId : Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
             $context,
-            $dataBag->get('languageId')
+            $dataBag->get('languageId'),
         );
     }
 
     private function fixTranslator(TemplateMailContext $businessEvent): void
     {
         $languageId = $businessEvent->getLanguageId() ?? $businessEvent->getContext()->getLanguageId();
-        $criteria = new Criteria([$languageId]);
-        $criteria->addAssociation('locale');
+        $localCode = $this->getLocaleCode(
+            $languageId,
+            $businessEvent->getContext(),
+        );
 
-        /** @var LanguageEntity $language */
-        $language = $this->languageRepository->search($criteria, $businessEvent->getContext())->first();
 
-        $localCode = $language->getLocale()?->getCode();
         if ($localCode === null) {
             return;
         }
@@ -110,7 +126,28 @@ class FlowSubscriber implements EventSubscriberInterface
             $businessEvent->getSalesChannelId(),
             $languageId,
             $localCode,
-            $businessEvent->getContext()
+            $businessEvent->getContext(),
         );
+    }
+
+    private function getLocaleCode(string $languageId, Context $context): ?string
+    {
+        $criteria = new Criteria([$languageId]);
+        $criteria->addAssociation('locale');
+
+        /** @var LanguageEntity $language */
+        $language = $this->languageRepository->search($criteria, $context)->first();
+
+        return $language->getLocale()?->getCode();
+    }
+
+    private function getSalesChannelName(string $salesChannelId, Context $context): ?string
+    {
+        $criteria = new Criteria([$salesChannelId]);
+
+        /** @var SalesChannelEntity $salesChannel */
+        $salesChannel = $this->salesChannelRepository->search($criteria, $context)->first();
+
+        return $salesChannel->getName();
     }
 }

@@ -69,7 +69,7 @@ class SearchPathProviderTest extends TestCase
     private static function createEvent(bool $salesChannelSource = false): TemplateMailContext
     {
         $context = new Context(
-            $salesChannelSource ? new SalesChannelApiSource(TestDefaults::SALES_CHANNEL) : new SystemSource()
+            $salesChannelSource ? new SalesChannelApiSource(TestDefaults::SALES_CHANNEL) : new SystemSource(),
         );
 
         return new TemplateMailContext(TestDefaults::SALES_CHANNEL, $context);
