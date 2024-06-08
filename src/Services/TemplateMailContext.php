@@ -14,6 +14,7 @@ class TemplateMailContext
     public function __construct(
         private readonly string $salesChannelId,
         private readonly Context $context,
+        private readonly ?string $languageId = null,
     ) {}
 
     public function getSalesChannelId(): string
@@ -24,5 +25,10 @@ class TemplateMailContext
     public function getContext(): Context
     {
         return $this->context;
+    }
+
+    public function getLanguageId(): ?string
+    {
+        return $this->languageId;
     }
 }
