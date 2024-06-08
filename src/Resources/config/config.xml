@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>Debug mode</title>
+        <title lang="de-DE">Debug-Modus</title>
+
+        <input-field type="bool">
+            <name>debugMode</name>
+            <label>Enable debug mode</label>
+            <label lang="de-DE">Debug-Modus aktivieren</label>
+            <helpText>Adds the technical name of the mail-template to the subject to easily identify which mail has been send</helpText>
+            <helpText lang="de-DE">Fügt den technischen Namen der Mail-Vorlage zum Betreff hinzu, um leicht zu erkennen, welche Mail gesendet wurde</helpText>
+        </input-field>
+    </card>
+</config>

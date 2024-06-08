@@ -14,6 +14,7 @@ use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class FlowSubscriberTest extends TestCase
 {
@@ -33,6 +34,8 @@ class FlowSubscriberTest extends TestCase
             $mailTemplateTypeRepository,
             $this->createMock(MailFinderServiceInterface::class),
             $this->createMock(AbstractTranslator::class),
+            $this->createMock(EntityRepository::class),
+            $this->createMock(SystemConfigService::class),
             $this->createMock(EntityRepository::class),
         );
 
