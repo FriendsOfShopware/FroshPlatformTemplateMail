@@ -19,6 +19,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\System\Language\LanguageCollection;
 use Shopware\Core\System\Language\LanguageEntity;
+use Shopware\Core\System\SalesChannel\SalesChannelCollection;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -30,7 +31,7 @@ class FlowSubscriber implements EventSubscriberInterface
     /**
      * @param EntityRepository<MailTemplateTypeCollection> $mailTemplateTypeRepository
      * @param EntityRepository<LanguageCollection> $languageRepository
-     * @param EntityRepository<SalesChannelEntity> $salesChannelRepository
+     * @param EntityRepository<SalesChannelCollection> $salesChannelRepository
      */
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
@@ -82,7 +83,7 @@ class FlowSubscriber implements EventSubscriberInterface
         }
 
         if ($subject) {
-            $salesChannelId = $dataBag->get('salesChannelId');
+            $salesChannelId = $dataBag->getString('salesChannelId');
             $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
             if ($debugMode) {
                 $subject = sprintf(
@@ -90,7 +91,7 @@ class FlowSubscriber implements EventSubscriberInterface
                     $subject,
                     $this->getSalesChannelName($salesChannelId, $context),
                     $this->getLocaleCode($context->getLanguageId(), $context),
-                    $technicalName
+                    $technicalName,
                 );
             }
             $dataBag->set('subject', $subject);
@@ -111,7 +112,7 @@ class FlowSubscriber implements EventSubscriberInterface
     {
         $localCode = $this->getLocaleCode(
             $businessEvent->getContext()->getLanguageId(),
-            $businessEvent->getContext()
+            $businessEvent->getContext(),
         );
 
         if ($localCode === null) {
