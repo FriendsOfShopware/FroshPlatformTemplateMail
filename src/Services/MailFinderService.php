@@ -9,7 +9,7 @@ use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Twig\Loader\FilesystemLoader;
 
@@ -27,7 +27,7 @@ class MailFinderService implements MailFinderServiceInterface
     public function __construct(
         #[Autowire(service: 'twig.loader.native_filesystem')]
         private readonly FilesystemLoader $filesystemLoader,
-        #[TaggedIterator('frosh_template_mail.loader')]
+        #[AutowireIterator('frosh_template_mail.loader')]
         private readonly iterable $availableLoaders,
         private readonly SearchPathProvider $searchPathProvider,
         private readonly Connection $connection,
