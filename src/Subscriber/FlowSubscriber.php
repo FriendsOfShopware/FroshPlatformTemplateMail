@@ -83,6 +83,7 @@ class FlowSubscriber implements EventSubscriberInterface
         }
 
         if ($subject) {
+            /** @var string|null $salesChannelId */
             $salesChannelId = $dataBag->get('salesChannelId');
             $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
 
@@ -155,6 +156,6 @@ class FlowSubscriber implements EventSubscriberInterface
         /** @var SalesChannelEntity $salesChannel */
         $salesChannel = $this->salesChannelRepository->search($criteria, $context)->first();
 
-        return $salesChannel->getTranslation('name');
+        return (string) $salesChannel->getTranslation('name');
     }
 }
