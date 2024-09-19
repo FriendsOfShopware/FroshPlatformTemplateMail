@@ -59,6 +59,14 @@ custom/plugins/FroshPlatformTemplateMail/src/Resources/views/email/global/order_
 * You can also nest templates. E.g.:
   * `custom/plugins/MyTheme/src/Resources/views/email/[ID]/[en-GB]/order_transaction.state.paid/html.twig` (Saleschannel ID)/(Language Locale)
 
+## MJML Support
+
+The plugin supports [MJML](https://mjml.io/). In the standard configuration mail templates in MJML format are processed via the service https://mjml.shyim.de.
+
+## Known Limitations
+
+* The test mail function in the admin panel does not support the overwritten mail templates. ([#34](https://github.com/FriendsOfShopware/FroshPlatformTemplateMail/issues/34)).
+
 ## Contributing
 
 Feel free to fork and send pull requests!
