@@ -29,11 +29,13 @@ class ExportCommandTest extends TestCase
         $command = new ExportCommand($connection);
 
         $tester = new CommandTester($command);
-        $tester->execute(['directory' => sys_get_temp_dir()]);
+        $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
 
-        $htmlFile = sys_get_temp_dir() . '/en/test_template/html.twig';
-        $plainFile = sys_get_temp_dir() . '/en/test_template/plain.twig';
-        $subjectFile = sys_get_temp_dir() . '/en/test_template/subject.twig';
+        $tester->execute(['directory' => $tempDir]);
+
+        $htmlFile = $tempDir . '/en/test_template/html.twig';
+        $plainFile = $tempDir . '/en/test_template/plain.twig';
+        $subjectFile = $tempDir . '/en/test_template/subject.twig';
 
         static::assertFileExists($htmlFile);
         static::assertFileExists($plainFile);
@@ -64,11 +66,12 @@ class ExportCommandTest extends TestCase
         $command = new ExportCommand($connection);
 
         $tester = new CommandTester($command);
-        $tester->execute(['directory' => sys_get_temp_dir()], ['template-id' => true]);
+        $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        $tester->execute(['directory' => $tempDir, '--template-id' => true]);
 
-        $htmlFile = sys_get_temp_dir() . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/html.twig';
-        $plainFile = sys_get_temp_dir() . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/plain.twig';
-        $subjectFile = sys_get_temp_dir() . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/subject.twig';
+        $htmlFile = $tempDir . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/html.twig';
+        $plainFile = $tempDir . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/plain.twig';
+        $subjectFile = $tempDir . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/subject.twig';
 
         static::assertFileExists($htmlFile);
         static::assertFileExists($plainFile);
