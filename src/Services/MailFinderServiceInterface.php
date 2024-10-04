@@ -11,6 +11,6 @@ interface MailFinderServiceInterface
         string $technicalName,
         TemplateMailContext $businessEvent,
         bool $returnFolder = false,
-        ?string $mailTemplateId = null
+        ?string $mailTemplateId = null,
     ): ?string;
 }
