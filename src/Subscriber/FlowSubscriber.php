@@ -67,7 +67,7 @@ class FlowSubscriber implements EventSubscriberInterface
 
         $technicalName = $mailTemplateType->getTechnicalName();
         $templateId = $dataBag->get('templateId', null);
-        assert($templateId === null | is_string($templateId));
+        assert($templateId === null || is_string($templateId));
 
         $event = $this->createTemplateMailContext($dataBag, $context);
 
