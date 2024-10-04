@@ -66,13 +66,15 @@ class FlowSubscriber implements EventSubscriberInterface
         $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context)->first();
 
         $technicalName = $mailTemplateType->getTechnicalName();
+        $templateId =  $dataBag->get('templateId');
+
         $event = $this->createTemplateMailContext($dataBag, $context);
 
         $this->fixTranslator($event);
 
-        $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $event);
-        $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $event);
-        $subject = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_SUBJECT, $technicalName, $event);
+        $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $event,false, $templateId);
+        $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $event,false, $templateId);
+        $subject = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_SUBJECT, $technicalName, $event, false, $templateId);
 
         if ($html) {
             $dataBag->set('contentHtml', $html);

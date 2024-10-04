@@ -23,6 +23,7 @@ class CachedMailFinderService implements MailFinderServiceInterface
         string $technicalName,
         TemplateMailContext $businessEvent,
         bool $returnFolder = false,
+        ?string $mailTemplateId = null,
     ): ?string {
         $salesChannelId = $businessEvent->getSalesChannelId();
 
@@ -30,15 +31,16 @@ class CachedMailFinderService implements MailFinderServiceInterface
             'xxh128',
             $type
             . $technicalName
+            . $mailTemplateId
             . $salesChannelId
             . $businessEvent->getContext()->getLanguageId()
             . $returnFolder,
         );
 
-        return $this->cache->get($cacheKey, function (ItemInterface $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder) {
+        return $this->cache->get($cacheKey, function (ItemInterface $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder, $mailTemplateId) {
             $cacheItem->expiresAfter(3600);
 
-            return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent, $returnFolder);
+            return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent, $returnFolder, $mailTemplateId);
         });
     }
 }
