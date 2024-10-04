@@ -40,6 +40,7 @@ class MailFinderService implements MailFinderServiceInterface
         string $technicalName,
         TemplateMailContext $businessEvent,
         bool $returnFolder = false,
+        ?string $mailTemplateId = null,
     ): ?string {
         $paths = $this->filesystemLoader->getPaths();
 
@@ -68,6 +69,11 @@ class MailFinderService implements MailFinderServiceInterface
 
                 foreach ($supportedExtensions as $supportedExtension) {
                     foreach ($searchFolder as $folder) {
+                        $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $mailTemplateId . '/' . $type . $supportedExtension;
+                        if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
+                            return $returnFolder ? $filePath : $content;
+                        }
+
                         $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
                         if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
                             return $returnFolder ? $filePath : $content;
