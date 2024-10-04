@@ -47,7 +47,7 @@ SQL;
 
         $fs = new Filesystem();
 
-        /** @var array{content_plain: string, content_html: string, subject: string, technical_name: string, locale: string} $record */
+        /** @var array{content_plain: string, content_html: string, subject: string, technical_name: string, id: string, locale: string} $record */
         foreach ($records as $record) {
             $templateDir = sprintf('%s/%s/%s', $directory, $record['locale'], $record['technical_name']);
 
