@@ -57,7 +57,7 @@ SQL;
                 'subject' => 'subject',
             ];
             foreach ($map as $field => $name) {
-                if ($input->getOption('uuid')) {
+                if ($input->getOption('template-id')) {
                     $targetFile = sprintf('%s/%s/%s.twig', $templateDir, Uuid::fromBytesToHex($record['id']), $name);
                 } else {
                     $targetFile = sprintf('%s/%s.twig', $templateDir, $name);
@@ -76,6 +76,6 @@ SQL;
     {
         $this
             ->addArgument('directory', InputArgument::REQUIRED, 'Target directory')
-            ->addOption('uuid', 'u', InputOption::VALUE_NONE, 'Create subfolders per UUID, to allow for multiple templates of the same type');
+            ->addOption('template-id', 't', InputOption::VALUE_NONE, 'Create subfolders per template UUID, to allow for multiple templates of the same type');
     }
 }

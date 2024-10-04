@@ -64,7 +64,7 @@ class ExportCommandTest extends TestCase
         $command = new ExportCommand($connection);
 
         $tester = new CommandTester($command);
-        $tester->execute(['directory' => sys_get_temp_dir()], ['uuid' => true]);
+        $tester->execute(['directory' => sys_get_temp_dir()], ['template-id' => true]);
 
         $htmlFile = sys_get_temp_dir() . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/html.twig';
         $plainFile = sys_get_temp_dir() . '/en/test_template/0eb261c6de95464296df0c8fad57e5ab/plain.twig';
