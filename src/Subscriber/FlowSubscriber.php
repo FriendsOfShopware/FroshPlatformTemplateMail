@@ -83,7 +83,7 @@ class FlowSubscriber implements EventSubscriberInterface
         }
 
         $salesChannelId = $dataBag->get('salesChannelId') ?: null;
-        if ($subject && $salesChannelId) {
+        if ($subject && is_string($salesChannelId)) {
             $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
             if ($debugMode) {
                 $subject = sprintf(
