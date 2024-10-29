@@ -152,6 +152,6 @@ class FlowSubscriber implements EventSubscriberInterface
         /** @var SalesChannelEntity $salesChannel */
         $salesChannel = $this->salesChannelRepository->search($criteria, $context)->first();
 
-        return $salesChannel->getTranslation('name');
+        return (string) $salesChannel->getTranslation('name');
     }
 }
