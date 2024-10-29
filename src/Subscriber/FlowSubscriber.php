@@ -145,7 +145,7 @@ class FlowSubscriber implements EventSubscriberInterface
         return $language->getLocale()?->getCode();
     }
 
-    private function getSalesChannelName(string $salesChannelId, Context $context): ?string
+    private function getSalesChannelName(string $salesChannelId, Context $context): string
     {
         $criteria = new Criteria([$salesChannelId]);
 
