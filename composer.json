@@ -1,6 +1,6 @@
 {
     "name": "frosh/frosh-platform-template-mail",
-    "version": "3.0.4",
+    "version": "3.0.5",
     "type": "shopware-platform-plugin",
     "description": "Load mail templates from theme",
     "keywords": [
