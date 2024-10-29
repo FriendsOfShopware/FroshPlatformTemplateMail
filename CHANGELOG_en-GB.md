@@ -1,0 +1,11 @@
+# 3.0.5
+- [prepare release](/82d7021)
+- [fix: phpstan by overwrite type](/c1e8522)
+- [fix phpstan](/f69a5dd)
+- [fix phpstan error](/394174a)
+- [fix: getSalesChannelName call](/39ffab3)
+- [fix: Only use the salesChannelId if it is set (#78)](/57c2504)
+- [Allow Multiple Template per Type (#75)](/fedcdd6)
+- [Update phpstan.neon.dist](/a838b2d)
+- [README: MJML/Mail test (#73)](/819d04e)
+- [fix: symfony deprecation](/8fb6243)
