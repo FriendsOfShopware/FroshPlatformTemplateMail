@@ -21,7 +21,7 @@ jobs:
     uses: shopware/github-actions/.github/workflows/phpstan.yml@main
     with:
       extensionName: ${{ github.event.repository.name }}
-      shopwareVersion: trunk
+      shopwareVersion: 6.6.x
   phpunit:
     strategy:
       fail-fast: false
