@@ -28,7 +28,7 @@ jobs:
       matrix:
         shopware-version:
           - '6.5.x'
-          - 'trunk'
+          - '6.6.x'
     uses: shopware/github-actions/.github/workflows/phpunit.yml@main
     with:
       extensionName: ${{ github.event.repository.name }}
