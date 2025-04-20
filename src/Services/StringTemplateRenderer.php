@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use DateTimeZone;
 use Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException;
 use Shopware\Core\Framework\Context;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
@@ -48,7 +47,7 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
             /** @var CoreExtension $coreExtensionGlobal */
             $coreExtensionGlobal = $this->platformTwig->getExtension(CoreExtension::class);
 
-            /** @var string|DateTimeZone $timezone */
+            /** @var string|\DateTimeZone $timezone */
             $timezone = $coreExtensionGlobal->getTimezone();
             $coreExtensionInternal->setTimezone($timezone);
 

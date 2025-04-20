@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
@@ -33,4 +33,3 @@ if (class_exists(\Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateR
         }
     }
 }
-
