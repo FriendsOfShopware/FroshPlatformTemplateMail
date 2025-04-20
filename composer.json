@@ -1,6 +1,6 @@
 {
     "name": "frosh/frosh-platform-template-mail",
-    "version": "3.0.5",
+    "version": "3.0.6",
     "type": "shopware-platform-plugin",
     "description": "Load mail templates from theme",
     "keywords": [
@@ -45,7 +45,7 @@
         }
     },
     "require": {
-        "shopware/core": "~6.5.0 || ~6.6.0"
+        "shopware/core": "~6.5.0 || ~6.6.0 || ~6.7.0"
     },
     "scripts": {
         "format": "docker run --rm -v $(pwd):/ext ghcr.io/shopwarelabs/extension-verifier:latest format /ext",
