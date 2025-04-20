@@ -15,7 +15,8 @@ class TemplateMailContext
         private readonly string $salesChannelId,
         private readonly Context $context,
         private readonly ?string $languageId = null,
-    ) {}
+    ) {
+    }
 
     public function getSalesChannelId(): string
     {

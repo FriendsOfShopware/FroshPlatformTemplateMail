@@ -17,7 +17,7 @@ Shopware.Component.override('sw-mail-template-list', {
                     label: 'sw-mail-template.list.columnTechnicalName',
                     allowResize: true,
                     visible: false,
-                },
+                }
             );
 
             return columns;

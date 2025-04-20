@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
-use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
@@ -41,7 +41,8 @@ class FlowSubscriber implements EventSubscriberInterface
         private readonly EntityRepository $languageRepository,
         private readonly SystemConfigService $systemConfigService,
         private readonly EntityRepository $salesChannelRepository,
-    ) {}
+    ) {
+    }
 
     public static function getSubscribedEvents(): array
     {
@@ -67,7 +68,7 @@ class FlowSubscriber implements EventSubscriberInterface
 
         $technicalName = $mailTemplateType->getTechnicalName();
         $templateId = $dataBag->get('templateId', null);
-        assert($templateId === null || is_string($templateId));
+        \assert($templateId === null || \is_string($templateId));
 
         $event = $this->createTemplateMailContext($dataBag, $context);
 
@@ -86,10 +87,10 @@ class FlowSubscriber implements EventSubscriberInterface
         }
 
         $salesChannelId = $dataBag->get('salesChannelId') ?: null;
-        if ($subject && is_string($salesChannelId)) {
+        if ($subject && \is_string($salesChannelId)) {
             $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
             if ($debugMode) {
-                $subject = sprintf(
+                $subject = \sprintf(
                     'DEBUG: %s (%s - %s - %s)',
                     $subject,
                     $this->getSalesChannelName($salesChannelId, $context),
@@ -120,7 +121,6 @@ class FlowSubscriber implements EventSubscriberInterface
             $languageId,
             $businessEvent->getContext(),
         );
-
 
         if ($localCode === null) {
             return;

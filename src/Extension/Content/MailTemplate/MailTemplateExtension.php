@@ -25,4 +25,9 @@ class MailTemplateExtension extends EntityExtension
     {
         return MailTemplateDefinition::class;
     }
+
+    public function getEntityName(): string
+    {
+        return MailTemplateDefinition::ENTITY_NAME;
+    }
 }

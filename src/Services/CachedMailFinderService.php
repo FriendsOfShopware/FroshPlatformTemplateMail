@@ -16,7 +16,8 @@ class CachedMailFinderService implements MailFinderServiceInterface
     public function __construct(
         private readonly MailFinderServiceInterface $mailFinderService,
         private readonly CacheInterface $cache,
-    ) {}
+    ) {
+    }
 
     public function findTemplateByTechnicalName(
         string $type,

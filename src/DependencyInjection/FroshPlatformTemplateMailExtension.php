@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Frosh\TemplateMail\DependencyInjection;
 
@@ -11,6 +11,7 @@ class FroshPlatformTemplateMailExtension extends Extension
     {
         $configuration = $this->getConfiguration($configs, $container);
         \assert($configuration instanceof Configuration);
+        /** @var array{mjml_server: string} $config */
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('frosh_platform_template_mail.mjml_server', $config['mjml_server']);
     }

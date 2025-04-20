@@ -25,16 +25,16 @@ class ExportCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $directory = $input->getArgument('directory');
-        if (!is_string($directory)) {
+        if (!\is_string($directory)) {
             throw new \RuntimeException('Directory is not a string');
         }
 
         $query = <<<'SQL'
-SELECT 
-    mail_template_translation.content_plain, 
-    mail_template_translation.content_html, 
-    mail_template_translation.subject, 
-    mail_template_type.technical_name, 
+SELECT
+    mail_template_translation.content_plain,
+    mail_template_translation.content_html,
+    mail_template_translation.subject,
+    mail_template_type.technical_name,
     mail_template.id,
     locale.code AS locale
 FROM mail_template_translation
@@ -49,7 +49,7 @@ SQL;
 
         /** @var array{content_plain: string, content_html: string, subject: string, technical_name: string, id: string, locale: string} $record */
         foreach ($records as $record) {
-            $templateDir = sprintf('%s/%s/%s', $directory, $record['locale'], $record['technical_name']);
+            $templateDir = \sprintf('%s/%s/%s', $directory, $record['locale'], $record['technical_name']);
 
             $map = [
                 'content_plain' => 'plain',
@@ -58,9 +58,9 @@ SQL;
             ];
             foreach ($map as $field => $name) {
                 if ($input->getOption('template-id')) {
-                    $targetFile = sprintf('%s/%s/%s.twig', $templateDir, Uuid::fromBytesToHex($record['id']), $name);
+                    $targetFile = \sprintf('%s/%s/%s.twig', $templateDir, Uuid::fromBytesToHex($record['id']), $name);
                 } else {
-                    $targetFile = sprintf('%s/%s.twig', $templateDir, $name);
+                    $targetFile = \sprintf('%s/%s.twig', $templateDir, $name);
                 }
 
                 $fs->dumpFile($targetFile, $record[$field]);

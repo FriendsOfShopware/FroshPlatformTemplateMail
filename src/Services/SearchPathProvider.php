@@ -16,7 +16,9 @@ class SearchPathProvider
     /**
      * @param EntityRepository<LanguageCollection> $languageRepository
      */
-    public function __construct(private readonly EntityRepository $languageRepository) {}
+    public function __construct(private readonly EntityRepository $languageRepository)
+    {
+    }
 
     /**
      * @return array<string>
@@ -31,7 +33,7 @@ class SearchPathProvider
 
         $criteria = new Criteria($businessEvent->getContext()->getLanguageIdChain());
         $criteria->addAssociation('locale');
-        $languages = $this->languageRepository->search($criteria, Context::createDefaultContext())->getElements();
+        $languages = $this->languageRepository->search($criteria, $businessEvent->getContext())->getElements();
 
         /** @var LanguageEntity $language */
         foreach (array_reverse($languages) as $language) {

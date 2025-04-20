@@ -20,7 +20,8 @@ class MjmlLoader implements LoaderInterface
         private readonly string $mjmlServer,
         private readonly LoggerInterface $logger,
         private readonly Client $client = new Client(),
-    ) {}
+    ) {
+    }
 
     /**
      * @throws GuzzleException
@@ -48,6 +49,7 @@ class MjmlLoader implements LoaderInterface
             return '';
         }
 
+        /** @var array{errors?: array<string>, html?: string}|string $compileTemplate */
         $compileTemplate = json_decode($response->getBody()->getContents(), true, 512, \JSON_THROW_ON_ERROR);
 
         if (empty($compileTemplate) || !\is_array($compileTemplate)) {
@@ -78,20 +80,18 @@ class MjmlLoader implements LoaderInterface
     {
         preg_match_all(self::MJML_INCLUDE, $string, $matches);
 
-        if ($matches !== []) {
-            foreach ($matches[0] as $key => $match) {
-                if (!str_contains((string) $matches[1][$key], 'mjml')) {
-                    $matches[1][$key] .= '.mjml';
-                }
-
-                $fileName = $folder . '/' . $matches[1][$key];
-
-                if (!file_exists($fileName)) {
-                    throw new MjmlCompileError(sprintf('File with name "%s", could not be found in path "%s"', $matches[1][$key], $fileName));
-                }
-
-                $string = str_replace($match, file_get_contents($fileName) ?: '', $string);
+        foreach ($matches[0] as $key => $match) {
+            if (!str_contains((string) $matches[1][$key], 'mjml')) {
+                $matches[1][$key] .= '.mjml';
             }
+
+            $fileName = $folder . '/' . $matches[1][$key];
+
+            if (!file_exists($fileName)) {
+                throw new MjmlCompileError(\sprintf('File with name "%s", could not be found in path "%s"', $matches[1][$key], $fileName));
+            }
+
+            $string = str_replace($match, file_get_contents($fileName) ?: '', $string);
         }
 
         return $string;

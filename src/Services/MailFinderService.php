@@ -33,7 +33,8 @@ class MailFinderService implements MailFinderServiceInterface
         private readonly Connection $connection,
         #[Autowire(service: 'kernel.bundles')]
         private readonly array $bundles,
-    ) {}
+    ) {
+    }
 
     public function findTemplateByTechnicalName(
         string $type,

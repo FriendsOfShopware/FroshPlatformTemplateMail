@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
+use DateTimeZone;
 use Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException;
 use Shopware\Core\Framework\Context;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
@@ -48,15 +48,20 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
             /** @var CoreExtension $coreExtensionGlobal */
             $coreExtensionGlobal = $this->platformTwig->getExtension(CoreExtension::class);
 
-            $coreExtensionInternal->setTimezone($coreExtensionGlobal->getTimezone());
-            $coreExtensionInternal->setDateFormat(...$coreExtensionGlobal->getDateFormat());
-            $coreExtensionInternal->setNumberFormat(...$coreExtensionGlobal->getNumberFormat());
+            /** @var string|DateTimeZone $timezone */
+            $timezone = $coreExtensionGlobal->getTimezone();
+            $coreExtensionInternal->setTimezone($timezone);
+
+            /** @var array{string|null, string|null} $dateFormat */
+            $dateFormat = $coreExtensionGlobal->getDateFormat();
+            $coreExtensionInternal->setDateFormat(...$dateFormat);
+
+            /** @var array{int, string, string} $numberFormat */
+            $numberFormat = $coreExtensionGlobal->getNumberFormat();
+            $coreExtensionInternal->setNumberFormat(...$numberFormat);
         }
     }
 
-    /**
-     * @throws StringTemplateRenderingException
-     */
     public function render(string $templateSource, array $data, Context $context, bool $htmlEscape = true): string
     {
         $name = md5($templateSource);
@@ -67,6 +72,7 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
         try {
             return $this->twig->render($name, $data);
         } catch (Error $error) {
+            // @phpstan-ignore-next-line
             throw new StringTemplateRenderingException($error->getMessage());
         }
     }

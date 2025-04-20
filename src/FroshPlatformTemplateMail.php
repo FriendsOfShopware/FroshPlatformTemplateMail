@@ -6,4 +6,6 @@ namespace Frosh\TemplateMail;
 
 use Shopware\Core\Framework\Plugin;
 
-class FroshPlatformTemplateMail extends Plugin {}
+class FroshPlatformTemplateMail extends Plugin
+{
+}

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
-use Frosh\TemplateMail\Services\TemplateMailContext;
 use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
+use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Content\MailTemplate\MailTemplateEntity;
@@ -28,7 +28,8 @@ class MailTemplateSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly EntityRepository $mailTemplateTypeRepository,
         private readonly MailFinderServiceInterface $mailFinderService,
-    ) {}
+    ) {
+    }
 
     public static function getSubscribedEvents(): array
     {
@@ -47,10 +48,9 @@ class MailTemplateSubscriber implements EventSubscriberInterface
         }
 
         $businessEvent = new TemplateMailContext($salesChannelId, $event->getContext());
-        $context = Context::createDefaultContext();
 
         /** @var MailTemplateTypeCollection $mailTemplateTypes */
-        $mailTemplateTypes = $this->mailTemplateTypeRepository->search(new Criteria(), $context)->getEntities();
+        $mailTemplateTypes = $this->mailTemplateTypeRepository->search(new Criteria(), $event->getContext())->getEntities();
 
         /** @var MailTemplateEntity $mailTemplateEntity */
         foreach ($event->getEntities() as $mailTemplateEntity) {
