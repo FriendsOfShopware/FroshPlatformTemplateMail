@@ -6,7 +6,6 @@ namespace Frosh\TemplateMail\Tests\Services;
 
 use Frosh\TemplateMail\Services\StringTemplateRenderer;
 use PHPUnit\Framework\TestCase;
-use Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException;
 use Shopware\Core\Framework\Context;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -23,7 +22,11 @@ class StringTemplateRendererTest extends TestCase
     {
         $renderer = new StringTemplateRenderer(new Environment(new ArrayLoader()));
 
-        static::expectException(StringTemplateRenderingException::class);
+        if (class_exists(\Shopware\Core\Framework\Adapter\AdapterException::class) && method_exists(\Shopware\Core\Framework\Adapter\AdapterException::class, 'invalidTemplateSyntax')) {
+            static::expectException(\Shopware\Core\Framework\Adapter\AdapterException::class);
+        } else {
+            static::expectException(\Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException::class);
+        }
 
         $renderer->render('{{ text() }}', [], Context::createDefaultContext());
     }

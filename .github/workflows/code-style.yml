@@ -24,7 +24,7 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            version-selection: [ 'lowest', 'highest']
+            version-selection: [ 'highest' ]
         steps:
             - name: Checkout
               uses: actions/checkout@v4

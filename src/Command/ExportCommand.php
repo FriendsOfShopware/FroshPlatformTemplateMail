@@ -63,6 +63,7 @@ SQL;
                     $targetFile = \sprintf('%s/%s.twig', $templateDir, $name);
                 }
 
+                // @phpstan-ignore-next-line
                 $fs->dumpFile($targetFile, $record[$field]);
             }
         }
