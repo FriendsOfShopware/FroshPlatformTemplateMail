@@ -37,6 +37,9 @@ class MailTemplateSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param EntityLoadedEvent<MailTemplateEntity> $event
+     */
     public function onMailTemplatesLoaded(EntityLoadedEvent $event): void
     {
         $source = $event->getContext()->getSource();

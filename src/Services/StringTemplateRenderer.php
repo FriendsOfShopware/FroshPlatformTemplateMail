@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
-use Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException;
 use Shopware\Core\Framework\Context;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Error\SyntaxError;
 use Twig\Extension\CoreExtension;
+use Twig\Extension\EscaperExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 
@@ -68,11 +69,35 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
 
         $this->twig->addGlobal('context', $context);
 
+        if ($this->twig->hasExtension(EscaperExtension::class)) {
+            /** @var EscaperExtension $escaperExtension */
+            $escaperExtension = $this->twig->getExtension(EscaperExtension::class);
+            $escaperExtension->setDefaultStrategy($htmlEscape ? 'html' : false);
+        }
+
+        if ($this->twig->hasExtension(CoreExtension::class) && \array_key_exists('timezone', $data) && $data['timezone'] !== null) {
+            $coreExtension = $this->twig->getExtension(CoreExtension::class);
+            $timezone = $data['timezone'];
+
+            if (\is_string($timezone) || $timezone instanceof \DateTimeZone) {
+                $coreExtension->setTimezone($timezone);
+            }
+        }
+
         try {
             return $this->twig->render($name, $data);
         } catch (Error $error) {
             // @phpstan-ignore-next-line
-            throw new StringTemplateRenderingException($error->getMessage());
+            if (class_exists(\Shopware\Core\Framework\Adapter\AdapterException::class) && method_exists(\Shopware\Core\Framework\Adapter\AdapterException::class, 'invalidTemplateSyntax')) {
+                if ($error instanceof SyntaxError) {
+                    throw \Shopware\Core\Framework\Adapter\AdapterException::invalidTemplateSyntax($error->getMessage());
+                }
+
+                throw \Shopware\Core\Framework\Adapter\AdapterException::renderingTemplateFailed($error->getMessage());
+            } else {
+                // @phpstan-ignore-next-line
+                throw new \Shopware\Core\Framework\Adapter\Twig\Exception\StringTemplateRenderingException($error->getMessage());
+            }
         }
     }
 
