@@ -1,8 +1,0 @@
-.idea
-*.phar
-/.phpunit.result.cache
-/composer.lock
-/vendor
-src/Resources/views/
-src/Resources/public/
-/.php-cs-fixer.cache
