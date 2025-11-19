@@ -71,6 +71,10 @@ class MailTemplateSubscriber implements EventSubscriberInterface
             $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $businessEvent, true, $mailTemplateEntity->getId());
             $subject = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_SUBJECT, $technicalName, $businessEvent, true, $mailTemplateEntity->getId());
 
+            $mailTemplateEntity->addTranslated('subject', file_get_contents($subject));
+            $mailTemplateEntity->addTranslated('contentHtml', file_get_contents($html));
+            $mailTemplateEntity->addTranslated('contentPlain', file_get_contents($plain));
+
             $mailTemplateEntity->addExtension(
                 'froshTemplateMail',
                 new ArrayStruct([
