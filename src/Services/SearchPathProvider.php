@@ -26,8 +26,9 @@ class SearchPathProvider
     {
         $searchFolder = [$businessEvent->getContext()->getLanguageId(), 'global'];
 
-        if ($businessEvent->getContext()->getSource() instanceof SalesChannelApiSource) {
-            array_unshift($searchFolder, $businessEvent->getContext()->getSource()->getSalesChannelId());
+        $contextSource = $businessEvent->getContext()->getSource();
+        if ($contextSource instanceof SalesChannelApiSource) {
+            array_unshift($searchFolder, $contextSource->getSalesChannelId());
         }
 
         $criteria = new Criteria($businessEvent->getContext()->getLanguageIdChain());

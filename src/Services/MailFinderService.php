@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Frosh\TemplateMail\Services;
 
 use Doctrine\DBAL\Connection;
+use Frosh\TemplateMail\DTO\TemplateData;
+use Frosh\TemplateMail\DTO\TemplateType;
+use Frosh\TemplateMail\DTO\TypeData;
 use Frosh\TemplateMail\Services\MailLoader\LoaderInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
@@ -16,10 +19,6 @@ use Twig\Loader\FilesystemLoader;
 #[AsAlias]
 class MailFinderService implements MailFinderServiceInterface
 {
-    final public const TYPE_HTML = 'html.';
-    final public const TYPE_PLAIN = 'plain.';
-    final public const TYPE_SUBJECT = 'subject.';
-
     /**
      * @param LoaderInterface[] $availableLoaders
      * @param array<BundleInterface> $bundles
@@ -36,55 +35,56 @@ class MailFinderService implements MailFinderServiceInterface
     ) {
     }
 
-    public function findTemplateByTechnicalName(
-        string $type,
+    public function getTemplateDataByTechnicalName(
         string $technicalName,
         TemplateMailContext $businessEvent,
-        bool $returnFolder = false,
         ?string $mailTemplateId = null,
-    ): ?string {
+    ): TemplateData {
+        $templateData = new TemplateData();
+
         $paths = $this->filesystemLoader->getPaths();
 
-        $searchFolder = $this->searchPathProvider->buildPaths($businessEvent);
+        $searchFolders = $this->searchPathProvider->buildPaths($businessEvent);
 
         $themePath = $this->findPathOfThemeFromPluginOrApp($businessEvent->getSalesChannelId())
             ?? $this->findPathOfThemeFromSymfonyBundle($businessEvent->getSalesChannelId());
 
         if (\is_string($themePath)) {
-            usort($paths, static function ($a, $b) use ($themePath) {
-                if (str_contains($a, $themePath)) {
-                    return -1;
-                }
-
-                if (str_contains($b, $themePath)) {
-                    return 1;
-                }
-
-                return 0;
-            });
+            \usort(
+                $paths,
+                static fn ($a, $b) => \str_contains($b, $themePath) <=> \str_contains($a, $themePath)
+            );
         }
 
         foreach ($paths as $path) {
-            foreach ($this->availableLoaders as $availableLoader) {
-                $supportedExtensions = $availableLoader->supportedExtensions();
+            $viewMailFolderPath = $path . '/email';
+            if (!\is_dir($viewMailFolderPath)) {
+                continue;
+            }
+
+            foreach ($this->availableLoaders as $loader) {
+                $supportedExtensions = $loader->supportedExtensions();
 
                 foreach ($supportedExtensions as $supportedExtension) {
-                    foreach ($searchFolder as $folder) {
-                        $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $mailTemplateId . '/' . $type . $supportedExtension;
-                        if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
-                            return $returnFolder ? $filePath : $content;
+                    foreach ($searchFolders as $folder) {
+                        $folderPath = $viewMailFolderPath . '/' . $folder . '/' . $technicalName;
+                        if (!\is_dir($folderPath)) {
+                            continue;
                         }
 
-                        $filePath = $path . '/email/' . $folder . '/' . $technicalName . '/' . $type . $supportedExtension;
-                        if (file_exists($filePath) && $content = $availableLoader->load($filePath)) {
-                            return $returnFolder ? $filePath : $content;
+                        $templateData->subject ??= $this->loadTypeData(TemplateType::SUBJECT, $loader, $supportedExtension, $folderPath, $mailTemplateId);
+                        $templateData->html ??= $this->loadTypeData(TemplateType::HTML, $loader, $supportedExtension, $folderPath, $mailTemplateId);
+                        $templateData->plain ??= $this->loadTypeData(TemplateType::PLAIN, $loader, $supportedExtension, $folderPath, $mailTemplateId);
+
+                        if ($templateData->isAllSet()) {
+                            return $templateData;
                         }
                     }
                 }
             }
         }
 
-        return null;
+        return $templateData;
     }
 
     public function findPathOfThemeFromPluginOrApp(string $salesChannelId): ?string
@@ -124,6 +124,32 @@ class MailFinderService implements MailFinderServiceInterface
 
         if (isset($this->bundles[$technicalName])) {
             return $this->bundles[$technicalName]->getPath();
+        }
+
+        return null;
+    }
+
+    private function loadTypeData(
+        TemplateType $type,
+        LoaderInterface $loader,
+        string $supportedExtension,
+        string $folderPath,
+        ?string $mailTemplateId
+    ): ?TypeData {
+        $filePath = $folderPath . '/' . $mailTemplateId . '/' . $type->filePart() . $supportedExtension;
+        if (\is_file($filePath) && $content = $loader->load($filePath)) {
+            return new TypeData(
+                $filePath,
+                $content,
+            );
+        }
+
+        $filePath = $folderPath . '/' . $type->filePart() . $supportedExtension;
+        if (\is_file($filePath) && $content = $loader->load($filePath)) {
+            return new TypeData(
+                $filePath,
+                $content,
+            );
         }
 
         return null;

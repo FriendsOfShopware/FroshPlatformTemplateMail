@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
+use Frosh\TemplateMail\DTO\TemplateData;
+
 interface MailFinderServiceInterface
 {
-    public function findTemplateByTechnicalName(
-        string $type,
+    public function getTemplateDataByTechnicalName(
         string $technicalName,
         TemplateMailContext $businessEvent,
-        bool $returnFolder = false,
         ?string $mailTemplateId = null,
-    ): ?string;
+    ): TemplateData;
 }
