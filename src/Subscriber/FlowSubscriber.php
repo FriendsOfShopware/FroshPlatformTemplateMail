@@ -8,12 +8,12 @@ use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
-use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\PartialEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\System\Language\LanguageCollection;
@@ -161,10 +161,10 @@ class FlowSubscriber implements EventSubscriberInterface
         $criteria = new Criteria([$mailTemplateTypeId]);
         $criteria->addFields(['technicalName']);
 
-        /** @var MailTemplateTypeEntity $mailTemplateType */
+        /** @var PartialEntity|null $mailTemplateType */
         $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->first();
 
-        $technicalName = $mailTemplateType->get('technicalName');
+        $technicalName = $mailTemplateType?->get('technicalName');
 
         if (!\is_string($technicalName)) {
             throw new \RuntimeException('technicalName could not be determined');
