@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Services;
 
+use Frosh\TemplateMail\DTO\TemplateData;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -19,29 +20,23 @@ class CachedMailFinderService implements MailFinderServiceInterface
     ) {
     }
 
-    public function findTemplateByTechnicalName(
-        string $type,
+    public function getTemplateDataByTechnicalName(
         string $technicalName,
         TemplateMailContext $businessEvent,
-        bool $returnFolder = false,
         ?string $mailTemplateId = null,
-    ): ?string {
-        $salesChannelId = $businessEvent->getSalesChannelId();
-
+    ): TemplateData {
         $cacheKey = hash(
             'xxh128',
-            $type
-            . $technicalName
+            $technicalName
             . $mailTemplateId
-            . $salesChannelId
+            . $businessEvent->getSalesChannelId()
             . $businessEvent->getContext()->getLanguageId()
-            . $returnFolder,
         );
 
-        return $this->cache->get($cacheKey, function (ItemInterface $cacheItem) use ($type, $technicalName, $businessEvent, $returnFolder, $mailTemplateId) {
+        return $this->cache->get($cacheKey, function (ItemInterface $cacheItem) use ($technicalName, $businessEvent, $mailTemplateId) {
             $cacheItem->expiresAfter(3600);
 
-            return $this->mailFinderService->findTemplateByTechnicalName($type, $technicalName, $businessEvent, $returnFolder, $mailTemplateId);
+            return $this->mailFinderService->getTemplateDataByTechnicalName($technicalName, $businessEvent, $mailTemplateId);
         });
     }
 }

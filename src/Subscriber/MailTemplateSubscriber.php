@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
-use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
@@ -67,16 +66,29 @@ class MailTemplateSubscriber implements EventSubscriberInterface
             }
 
             $technicalName = $mailTemplateType->getTechnicalName();
-            $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $businessEvent, true, $mailTemplateEntity->getId());
-            $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $businessEvent, true, $mailTemplateEntity->getId());
-            $subject = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_SUBJECT, $technicalName, $businessEvent, true, $mailTemplateEntity->getId());
+
+            $templateData = $this->mailFinderService->getTemplateDataByTechnicalName($technicalName, $businessEvent, $mailTemplateEntity->getId());
+            if ($templateData->subject !== null) {
+                $mailTemplateEntity->setSubject($templateData->subject->content);
+                $mailTemplateEntity->addTranslated('subject', $templateData->subject->content);
+            }
+
+            if ($templateData->html !== null) {
+                $mailTemplateEntity->setContentHtml($templateData->html->content);
+                $mailTemplateEntity->addTranslated('contentHtml', $templateData->html->content);
+            }
+
+            if ($templateData->plain !== null) {
+                $mailTemplateEntity->setContentPlain($templateData->plain->content);
+                $mailTemplateEntity->addTranslated('contentPlain', $templateData->plain->content);
+            }
 
             $mailTemplateEntity->addExtension(
                 'froshTemplateMail',
                 new ArrayStruct([
-                    'html' => $html,
-                    'plain' => $plain,
-                    'subject' => $subject,
+                    'subject' => $templateData->subject?->filePath,
+                    'html' => $templateData->html?->filePath,
+                    'plain' => $templateData->plain?->filePath,
                     'technicalName' => $technicalName,
                 ]),
             );

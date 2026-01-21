@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Frosh\TemplateMail\Subscriber;
 
-use Frosh\TemplateMail\Services\MailFinderService;
 use Frosh\TemplateMail\Services\MailFinderServiceInterface;
 use Frosh\TemplateMail\Services\TemplateMailContext;
 use Shopware\Core\Content\Flow\Events\FlowSendMailActionEvent;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeCollection;
-use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
 use Shopware\Core\Framework\Adapter\Translation\Translator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\PartialEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\System\Language\LanguageCollection;
@@ -63,10 +62,6 @@ class FlowSubscriber implements EventSubscriberInterface
 
     private function sendMail(DataBag $dataBag, string $mailTemplateTypeId, Context $context): void
     {
-        /** @var MailTemplateTypeEntity $mailTemplateType */
-        $mailTemplateType = $this->mailTemplateTypeRepository->search(new Criteria([$mailTemplateTypeId]), $context)->first();
-
-        $technicalName = $mailTemplateType->getTechnicalName();
         $templateId = $dataBag->get('templateId', null);
         \assert($templateId === null || \is_string($templateId));
 
@@ -74,29 +69,32 @@ class FlowSubscriber implements EventSubscriberInterface
 
         $this->fixTranslator($event);
 
-        $html = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_HTML, $technicalName, $event, false, $templateId);
-        $plain = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_PLAIN, $technicalName, $event, false, $templateId);
-        $subject = $this->mailFinderService->findTemplateByTechnicalName(MailFinderService::TYPE_SUBJECT, $technicalName, $event, false, $templateId);
+        $technicalName = $this->getTechnicalName($mailTemplateTypeId, $context);
+        $templateData = $this->mailFinderService->getTemplateDataByTechnicalName($technicalName, $event, $templateId);
 
-        if ($html) {
-            $dataBag->set('contentHtml', $html);
+        if ($templateData->html !== null) {
+            $dataBag->set('contentHtml', $templateData->html->content);
         }
 
-        if ($plain) {
-            $dataBag->set('contentPlain', $plain);
+        if ($templateData->plain !== null) {
+            $dataBag->set('contentPlain', $templateData->plain->content);
         }
 
-        $salesChannelId = $dataBag->get('salesChannelId') ?: null;
-        if ($subject && \is_string($salesChannelId)) {
-            $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
-            if ($debugMode) {
-                $subject = \sprintf(
-                    'DEBUG: %s (%s - %s - %s)',
-                    $subject,
-                    $this->getSalesChannelName($salesChannelId, $context),
-                    $this->getLocaleCode($context->getLanguageId(), $context),
-                    $technicalName,
-                );
+        if ($templateData->subject !== null) {
+            $subject = $templateData->subject->content;
+            $salesChannelId = $dataBag->get('salesChannelId') ?: null;
+
+            if (\is_string($salesChannelId)) {
+                $debugMode = $this->systemConfigService->getBool('FroshPlatformTemplateMail.config.debugMode', $salesChannelId);
+                if ($debugMode) {
+                    $subject = \sprintf(
+                        'DEBUG: %s (%s - %s - %s)',
+                        $subject,
+                        $this->getSalesChannelName($salesChannelId, $context),
+                        $this->getLocaleCode($context->getLanguageId(), $context),
+                        $technicalName,
+                    );
+                }
             }
             $dataBag->set('subject', $subject);
         }
@@ -156,5 +154,22 @@ class FlowSubscriber implements EventSubscriberInterface
         $name = $salesChannel->getTranslation('name');
 
         return $name;
+    }
+
+    private function getTechnicalName(string $mailTemplateTypeId, Context $context): string
+    {
+        $criteria = new Criteria([$mailTemplateTypeId]);
+        $criteria->addFields(['technicalName']);
+
+        /** @var PartialEntity|null $mailTemplateType */
+        $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->first();
+
+        $technicalName = $mailTemplateType?->get('technicalName');
+
+        if (!\is_string($technicalName)) {
+            throw new \RuntimeException('technicalName could not be determined');
+        }
+
+        return $technicalName;
     }
 }
