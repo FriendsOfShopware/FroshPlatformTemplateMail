@@ -45,7 +45,7 @@
         }
     },
     "require": {
-        "shopware/core": "~6.5.0 || ~6.6.0 || ~6.7.0"
+        "shopware/core": "~6.5.8 || ~6.6.0 || ~6.7.0"
     },
     "scripts": {
         "format": "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension format /ext",
