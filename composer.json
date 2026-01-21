@@ -49,6 +49,9 @@
     },
     "scripts": {
         "format": "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension format /ext",
-        "check": "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension validate --full /ext"
+        "check": [
+            "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension validate --check-against lowest --full /ext",
+            "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension validate --check-against highest --full /ext"
+        ]
     }
 }
