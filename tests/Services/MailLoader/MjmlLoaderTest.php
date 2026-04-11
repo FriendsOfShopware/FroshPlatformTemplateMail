@@ -6,53 +6,61 @@ namespace Frosh\TemplateMail\Tests\Services\MailLoader;
 
 use Frosh\TemplateMail\Exception\MjmlCompileError;
 use Frosh\TemplateMail\Services\MailLoader\MjmlLoader;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Frosh\TemplateMail\Services\MjmlRenderer\MjmlRendererInterface;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 
 class MjmlLoaderTest extends TestCase
 {
-    public function testLoadingWorks(): void
+    public function testSupportedExtensions(): void
     {
-        $loader = new MjmlLoader('https://mjml.shyim.de', new NullLogger());
+        $renderer = $this->createMock(MjmlRendererInterface::class);
+        $loader = new MjmlLoader($renderer);
+
         static::assertSame(['mjml'], $loader->supportedExtensions());
-
-        $text = $loader->load(__DIR__ . '/_fixtures/test.mjml');
-        static::assertStringContainsString('<!doctype html>', $text);
-        static::assertStringContainsString('<tbody>', $text);
     }
 
-    public function testApiIsNotAvailable(): void
+    public function testLoadDelegatesToRenderer(): void
     {
-        $mock = new MockHandler([
-            new ServerException('Error Communicating with Server', new Request('GET', 'test'), new Response(500)),
-        ]);
+        $renderer = $this->createMock(MjmlRendererInterface::class);
+        $renderer->expects(static::once())
+            ->method('render')
+            ->with(static::stringContains('<mjml>'))
+            ->willReturn('<html>rendered</html>');
 
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $loader = new MjmlLoader($renderer);
+        $result = $loader->load(__DIR__ . '/_fixtures/test.mjml');
 
-        $loader = new MjmlLoader('https://mjml.shyim.de', new NullLogger(), $client);
-
-        static::assertSame('', $loader->load(__DIR__ . '/_fixtures/test.mjml'));
+        static::assertSame('<html>rendered</html>', $result);
     }
 
-    public function testApiRespondsErrors(): void
+    public function testLoadReturnsEmptyStringForNonExistentFile(): void
     {
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], json_encode(['errors' => ['some error happend']], JSON_THROW_ON_ERROR)),
-        ]);
+        $renderer = $this->createMock(MjmlRendererInterface::class);
+        $renderer->expects(static::never())->method('render');
 
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $loader = new MjmlLoader($renderer);
+        $result = $loader->load(__DIR__ . '/_fixtures/nonexistent.mjml');
 
-        $loader = new MjmlLoader('https://mjml.shyim.de', new NullLogger(), $client);
+        static::assertSame('', $result);
+    }
+
+    public function testLoadThrowsOnMissingInclude(): void
+    {
+        $renderer = $this->createMock(MjmlRendererInterface::class);
+        $loader = new MjmlLoader($renderer);
+
+        // Create a temp file with an include that doesn't exist
+        $tempDir = sys_get_temp_dir() . '/mjml_test_' . uniqid();
+        mkdir($tempDir);
+        file_put_contents($tempDir . '/test.mjml', '<mjml><mj-body><mj-include path="missing.mjml" /></mj-body></mjml>');
 
         static::expectException(MjmlCompileError::class);
-        $loader->load(__DIR__ . '/_fixtures/test.mjml');
+
+        try {
+            $loader->load($tempDir . '/test.mjml');
+        } finally {
+            unlink($tempDir . '/test.mjml');
+            rmdir($tempDir);
+        }
     }
 }
