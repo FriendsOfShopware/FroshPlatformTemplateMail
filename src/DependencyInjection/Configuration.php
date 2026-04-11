@@ -15,6 +15,10 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('mjml_server')->defaultValue('https://mjml.shyim.de')->end()
+                ->enumNode('mjml_renderer')
+                    ->values(['api', 'local'])
+                    ->defaultValue('api')
+                ->end()
             ->end()
         ;
 
