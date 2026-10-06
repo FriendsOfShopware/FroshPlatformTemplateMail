@@ -79,7 +79,7 @@ class MailBeforeValidateSubscriber implements EventSubscriberInterface
         $criteria->addFields(['technicalName']);
 
         /** @var PartialEntity|null $mailTemplateType */
-        $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->first();
+        $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->getEntities()->first();
 
         $technicalName = $mailTemplateType?->get('technicalName');
 
