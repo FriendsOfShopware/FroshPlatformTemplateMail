@@ -124,6 +124,8 @@ class FlowSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $this->translator->resetInjection();
+
         $this->translator->injectSettings(
             $businessEvent->getSalesChannelId(),
             $languageId,
