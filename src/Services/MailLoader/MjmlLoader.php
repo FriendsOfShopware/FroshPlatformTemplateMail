@@ -65,7 +65,7 @@ class MjmlLoader implements LoaderInterface
             throw new MjmlCompileError(implode('\n', $compileTemplate['errors']));
         }
 
-        return $compileTemplate['html'];
+        return $compileTemplate['html'] ?? '';
     }
 
     /**

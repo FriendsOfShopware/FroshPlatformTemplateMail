@@ -33,7 +33,7 @@ class SearchPathProvider
 
         $criteria = new Criteria($businessEvent->getContext()->getLanguageIdChain());
         $criteria->addAssociation('locale');
-        $languages = $this->languageRepository->search($criteria, $businessEvent->getContext())->getElements();
+        $languages = $this->languageRepository->search($criteria, $businessEvent->getContext())->getEntities()->getElements();
 
         /** @var LanguageEntity $language */
         foreach (array_reverse($languages) as $language) {
