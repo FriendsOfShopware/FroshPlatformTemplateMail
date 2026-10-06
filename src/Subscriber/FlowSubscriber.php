@@ -140,7 +140,7 @@ class FlowSubscriber implements EventSubscriberInterface
         $criteria->addAssociation('locale');
 
         /** @var LanguageEntity $language */
-        $language = $this->languageRepository->search($criteria, $context)->first();
+        $language = $this->languageRepository->search($criteria, $context)->getEntities()->first();
 
         return $language->getLocale()?->getCode();
     }
@@ -150,7 +150,7 @@ class FlowSubscriber implements EventSubscriberInterface
         $criteria = new Criteria([$salesChannelId]);
 
         /** @var SalesChannelEntity $salesChannel */
-        $salesChannel = $this->salesChannelRepository->search($criteria, $context)->first();
+        $salesChannel = $this->salesChannelRepository->search($criteria, $context)->getEntities()->first();
 
         /** @var string */
         $name = $salesChannel->getTranslation('name');
@@ -164,7 +164,7 @@ class FlowSubscriber implements EventSubscriberInterface
         $criteria->addFields(['technicalName']);
 
         /** @var PartialEntity|null $mailTemplateType */
-        $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->first();
+        $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->getEntities()->first();
 
         $technicalName = $mailTemplateType?->get('technicalName');
 
