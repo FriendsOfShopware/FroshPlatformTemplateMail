@@ -62,47 +62,6 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
         });
     }
 
-    /**
-     * The extensions are copied lazily: this service can be built while the platform twig is still
-     * being constructed (circular reference through a twig extension), and extensions registered
-     * after that point - like the AttributeExtension instances, which are always added last - would
-     * silently be missing from an eager copy.
-     */
-    private function copyExtensions(): void
-    {
-        if ($this->extensionsCopied) {
-            return;
-        }
-
-        $this->extensionsCopied = true;
-
-        foreach ($this->platformTwig->getExtensions() as $extension) {
-            if ($this->twig->hasExtension($extension::class)) {
-                continue;
-            }
-            $this->twig->addExtension($extension);
-        }
-
-        if ($this->twig->hasExtension(CoreExtension::class) && $this->platformTwig->hasExtension(CoreExtension::class)) {
-            /** @var CoreExtension $coreExtensionInternal */
-            $coreExtensionInternal = $this->twig->getExtension(CoreExtension::class);
-            /** @var CoreExtension $coreExtensionGlobal */
-            $coreExtensionGlobal = $this->platformTwig->getExtension(CoreExtension::class);
-
-            /** @var string|\DateTimeZone $timezone */
-            $timezone = $coreExtensionGlobal->getTimezone();
-            $coreExtensionInternal->setTimezone($timezone);
-
-            /** @var array{string|null, string|null} $dateFormat */
-            $dateFormat = $coreExtensionGlobal->getDateFormat();
-            $coreExtensionInternal->setDateFormat(...$dateFormat);
-
-            /** @var array{int, string, string} $numberFormat */
-            $numberFormat = $coreExtensionGlobal->getNumberFormat();
-            $coreExtensionInternal->setNumberFormat(...$numberFormat);
-        }
-    }
-
     public function render(string $templateSource, array $data, Context $context, bool $htmlEscape = true): string
     {
         $this->copyExtensions();
@@ -160,5 +119,46 @@ class StringTemplateRenderer extends \Shopware\Core\Framework\Adapter\Twig\Strin
     {
         $this->twig->addGlobal('testMode', false);
         $this->twig->enableStrictVariables();
+    }
+
+    /**
+     * The extensions are copied lazily: this service can be built while the platform twig is still
+     * being constructed (circular reference through a twig extension), and extensions registered
+     * after that point - like the AttributeExtension instances, which are always added last - would
+     * silently be missing from an eager copy.
+     */
+    private function copyExtensions(): void
+    {
+        if ($this->extensionsCopied) {
+            return;
+        }
+
+        $this->extensionsCopied = true;
+
+        foreach ($this->platformTwig->getExtensions() as $extension) {
+            if ($this->twig->hasExtension($extension::class)) {
+                continue;
+            }
+            $this->twig->addExtension($extension);
+        }
+
+        if ($this->twig->hasExtension(CoreExtension::class) && $this->platformTwig->hasExtension(CoreExtension::class)) {
+            /** @var CoreExtension $coreExtensionInternal */
+            $coreExtensionInternal = $this->twig->getExtension(CoreExtension::class);
+            /** @var CoreExtension $coreExtensionGlobal */
+            $coreExtensionGlobal = $this->platformTwig->getExtension(CoreExtension::class);
+
+            /** @var string|\DateTimeZone $timezone */
+            $timezone = $coreExtensionGlobal->getTimezone();
+            $coreExtensionInternal->setTimezone($timezone);
+
+            /** @var array{string|null, string|null} $dateFormat */
+            $dateFormat = $coreExtensionGlobal->getDateFormat();
+            $coreExtensionInternal->setDateFormat(...$dateFormat);
+
+            /** @var array{int, string, string} $numberFormat */
+            $numberFormat = $coreExtensionGlobal->getNumberFormat();
+            $coreExtensionInternal->setNumberFormat(...$numberFormat);
+        }
     }
 }
